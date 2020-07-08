@@ -27,7 +27,7 @@ void initlca(){
 int lca(int a, int b){
     if (prof[a] < prof[b]) swap(a, b);
     for (int i=LG-1; i>=0; i--){
-        if (prof[a] - (1 << i) >= prof[b]) a = anc[a][i];
+        if (prof[a] - prof[b]  >= (1 << i)) a = anc[a][i];
     }
     if (a == b) return a;
     for (int i=LG-1; i>=0; i--){
