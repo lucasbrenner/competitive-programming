@@ -13,9 +13,7 @@ struct seg_tree{
         build(1, 1, n);
     }
 
-    seg_tree(int n_) : n(n_){
-        seg_tree(vector<T>(n_));
-    }
+    seg_tree(int n_) : seg_tree(vector<T>(n_)) {}
 
     T identity(){
         return 0;
@@ -78,8 +76,12 @@ int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
 
-    int n,q; cin >> n >> q;
-    vector<long long> a(n);
-    for (int i=0; i<n; i++) cin >> a[i];
+    vector<long long> a(3, 50);
     seg_tree<long long> stree(a);
+
+    seg_tree<int> stree1(10);
+    stree1.upd(5, 10, -3);
+    stree1.upd(3, 5, 7);
+    cout << stree1.qry(5) << endl;
+    cout << stree1.qry(10) << endl;
 }

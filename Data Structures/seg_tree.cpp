@@ -12,9 +12,7 @@ struct seg_tree{
         build(1, 1, n);
     }
 
-    seg_tree(int n_) : n(n_){
-        seg_tree(vector<T>(n_));
-    }
+    seg_tree(int n_) : seg_tree(vector<T>(n_)) {}
 
     T identity(){
         return 0;
