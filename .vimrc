@@ -1,7 +1,8 @@
 """ MAPPINGS
 inoremap jk <ESC>
 inoremap JK <ESC>
-inoremap {<CR> {<CR>x<C-O>o}<ESC>kwxA
+inoremap {<CR> {<CR>}<C-O>O
+"inoremap {<CR> {<CR>x<C-O>o}<ESC>kwxA
 inoremap <C-A> <ESC>ggVG
 
 noremap <C-C> "+y
@@ -15,6 +16,7 @@ nnoremap <C-A> ggVG
 
 autocmd filetype cpp nnoremap <F5> :w <bar> !g++ % -o %:r && ./%:r < ./in.txt <CR>
 autocmd filetype cpp nnoremap <F6> :w <bar> !g++ % -o %:r && ./%:r <CR>
+autocmd filetype py nnoremap <F6> :w <bar>
 
 """ SETS
 
