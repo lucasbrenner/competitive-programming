@@ -28,6 +28,10 @@ struct dsu{
         }
         return true;
     }
+
+    bool same(int a, int b) {
+        return find(a) == find(b);
+    }
 };
  
 int main(){
