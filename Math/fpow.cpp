@@ -1,15 +1,19 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-long long const M = 1000000007;
+const long long MOD = 1000000007;
 long long fpow(long long b, long long e){
-    if (e == 0) return 1LL;
-    if (e == 1) return b;
-    if (e & 1LL) return b * fpow(b, e-1) % M;
-    long long temp = fpow(b, e/2LL);
-    return temp * temp % M;
+    b %= MOD;
+    long long ans = 1;
+    while (e > 0) {
+        if (e & 1ll) ans = ans * b % MOD;
+        b = b * b % MOD;
+        e >>= 1ll;
+    }
+    return ans;
 }
 
 int main(){
-    cout << fpow(2, 5) << endl;
+    long long b, e; cin >> b >> e;
+    cout << fpow(b, e) << endl;
 }
