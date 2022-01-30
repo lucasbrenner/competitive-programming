@@ -1,55 +1,78 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-int const N = 100001, LG = 33 - __builtin_clz(N);
-int anc[N][LG], n, prof[N];
-vector<int> adj[N];
+struct lca {
+    vector<vector<int>> adj, anc;
+    vector<int> depth;
+    int n, lg;
 
-void dfs(int v=1, int p=-1, int d=1){
-    prof[v] = d;
-    for (int c : adj[v]){
-        if (c == p) continue;
-        anc[c][0] = v;
-        dfs(c, v, d+1);
+    lca(int _n) {
+        n = _n;
+        lg = 33 - __builtin_clz(n);
+        adj.resize(n + 1);
+        anc = vector<vector<int>>(n, vector<int>(lg));
+        depth.resize(n + 1);
     }
-}
 
-void initlca(){
-    dfs();
-    for (int i=1; i<LG; i++){
-        for (int v=1; v<=n; v++){
-            if (prof[v] - (1 << i) < 1) continue;
-            anc[v][i] = anc[anc[v][i-1]][i-1];
-        }
-    }
-}
-
-int lca(int a, int b){
-    if (prof[a] < prof[b]) swap(a, b);
-    for (int i=LG-1; i>=0; i--){
-        if (prof[a] - prof[b]  >= (1 << i)) a = anc[a][i];
-    }
-    if (a == b) return a;
-    for (int i=LG-1; i>=0; i--){
-        if (anc[a][i] != anc[b][i]){
-            a = anc[a][i];
-            b = anc[b][i];
-        }
-    }
-    return anc[a][0];
-}
-
-int main(){
-    cin >> n;
-    for (int i=1; i<n; i++){
-        int u,v; cin >> u >> v;
+    void add_edge(int u, int v) {
         adj[u].push_back(v);
         adj[v].push_back(u);
     }
-    initlca();
-    int q; cin >> q;
+
+    void dfs(int v, int p, int d){
+        depth[v] = d;
+        for (int c : adj[v]){
+            if (c == p) continue;
+            anc[c][0] = v;
+            dfs(c, v, d + 1);
+        }
+    }
+
+    void build(int root){
+        dfs(root, -1, 1);
+        for (int i = 1; i < lg; i++){
+            for (int v = 1; v <= n; v++){
+                if (depth[v] - (1 << i) >= 1) {
+                    anc[v][i] = anc[anc[v][i - 1]][i - 1];
+                }
+            }
+        }
+    }
+
+    int get_lca(int a, int b){
+        if (depth[a] < depth[b]) swap(a, b);
+
+        for (int i = lg - 1; i >= 0; i--){
+            if (depth[a] - depth[b]  >= (1 << i)) a = anc[a][i];
+        }
+        if (a == b) return a;
+
+        for (int i = lg - 1; i >= 0; i--){
+            if (anc[a][i] != anc[b][i]){
+                a = anc[a][i];
+                b = anc[b][i];
+            }
+        }
+        return anc[a][0];
+    }
+};
+
+int main(){
+    ios_base::sync_with_stdio(false);
+    cin.tie(0);
+
+    int n, q; cin >> n >> q;
+    lca g(n);
+
+    for (int i = 1; i < n; i++){
+        int p; cin >> p;
+        g.add_edge(p, i);
+    }
+
+    g.build(0);
+
     while(q--){
-        int a,b; cin >> a >> b;
-        cout << lca(a,b) << endl;
+        int a, b; cin >> a >> b;
+        cout << g.get_lca(a, b) << '\n';
     }
 }
