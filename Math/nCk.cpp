@@ -1,7 +1,7 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-long long const N = 2e5 + 1, M = 1e9 + 7;
+const long long N = 2e5 + 1, M = 1e9 + 7;
 long long fn[N], fd[N], iv[N];
 
 void initnck(){
