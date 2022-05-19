@@ -1,8 +1,6 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-int const N = 2e5 + 1;
-
 vector<int> primes;
 void sieve(int n){
     bool prime[n+1];
