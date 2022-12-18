@@ -1,46 +1,49 @@
-#include<bits/stdc++.h>
+#include"bits/stdc++.h"
 using namespace std;
 
-vector<int> suffix_array(string s){
-    int n = s.size(), alf = max(256, n+2);
-    vector<int> ans, rnk(n), temp_rnk(n), aux[alf];
-    
-    for (int i=0; i<n; i++) rnk[i] = s[i];
+const int ALP = 256;
 
-    function<int (int)> gr = [&](int i){ return (i < n ? rnk[i] : -1); }; //get rank
-
-    for (int d=1; d<=n; d <<= 1){
-
-        ans.clear();
-        for (int i=0; i<n; i++) aux[gr(i+d)+1].push_back(i);
-        for (int i=0; i<alf; i++){
-            for (int j=0; j<aux[i].size(); j++){
-                ans.push_back(aux[i][j]);
-            }
-            aux[i].clear();
-        }
-        for (int i=0; i<n; i++) aux[gr(ans[i])].push_back(ans[i]);
-        ans.clear();
-        for (int i=0; i<alf; i++){
-            for (int j=0; j<aux[i].size(); j++){
-                ans.push_back(aux[i][j]);
-            }
-            aux[i].clear();
-        }
-
-        temp_rnk[ans[0]] = 0;
-        for (int i=1; i<n; i++){
-            temp_rnk[ans[i]] = temp_rnk[ans[i-1]] + (make_pair(gr(ans[i]), gr(ans[i]+d)) != make_pair(gr(ans[i-1]), gr(ans[i-1]+d)));
-        }
-        rnk = temp_rnk;
-        if (rnk[ans[n-1]] == n-1) break;
+vector<int> suffix_array(const string &s) {
+    int n = s.length(), cl = 1;
+    vector<int> c(n), p(n), cn(n), pn(n), cnt(max(n, ALP), 0);
+    for (int i = 0; i < n; i++) cnt[s[i]]++;
+    for (int i = 1; i < ALP; i++) cnt[i] += cnt[i - 1];
+    for (int i = 0; i < n; i++) p[--cnt[s[i]]] = i;
+    c[p[0]] = 0;
+    for (int i = 1; i < n; i++) {
+        if(s[p[i]] != s[p[i - 1]]) cl++;
+        c[p[i]] = cl - 1;
     }
-    return ans;
+    for (int h = 0; (1 << h) < n; h++) {
+        for (int i = 0; i < n; i++) {
+            pn[i] = p[i] - (1 << h);
+            if (pn[i] < 0) pn[i] += n;
+        }
+        fill(cnt.begin(), cnt.end(), 0);
+        for (int i = 0; i < n; i++) cnt[c[pn[i]]]++;
+        for (int i = 1; i < cl; i++) cnt[i] += cnt[i - 1];
+        for (int i = n - 1; i >= 0; i--) {
+            p[--cnt[c[pn[i]]]] = pn[i];
+        }
+        cl = 1;
+        cn[p[0]] = 0;
+        for (int i = 1; i < n; i++) {
+            pair<int, int> cur = {c[p[i]], c[(p[i] + (1 << h)) % n]};
+            pair<int, int> prv = {c[p[i - 1]], c[(p[i - 1] + (1 << h)) % n]};
+            if(cur != prv) cl++;
+            cn[p[i]] = cl - 1;
+        }
+        cn.swap(c);
+    }
+    return p;
 }
 
-int main(){
+int main() {
+    ios_base::sync_with_stdio(0); cin.tie(0);
     string s; cin >> s;
-
-    vector<int> a = suffix_array(s);
-    for (int i=0; i<a.size(); i++) cout << a[i] << " \n"[i == a.size()-1];
+    s += '$';
+    auto sa = suffix_array(s);
+    for (int x : sa) cout << x << " ";
+    cout << endl;
 }
+
