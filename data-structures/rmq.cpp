@@ -1,10 +1,11 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-struct sptable {
+struct rmq {
     vector<vector<int>> t;
 
-    sptable(const vector<int> &a) {
+    rmq() {}
+    rmq(const vector<int> &a) {
         int n = a.size(), lg = __builtin_clz(1) - __builtin_clz(n);
         t = vector<vector<int>>(lg + 1, vector<int>(n));
         for (int i = 0; i < n; i++) t[0][i] = a[i];
