@@ -1,22 +1,22 @@
-#include <bits/stdc++.h>
+#include "bits/stdc++.h"
 using namespace std;
 
-struct dsu{
+struct dsu {
     int n;
     vector<int> p, rnk;
 
-    dsu(int n_) : n(n_){
-        p.resize(n+1, 0);
+    dsu(int n_) : n(n_) {
+        p.resize(n + 1, 0);
         iota(p.begin(), p.end(), 0);
-        rnk.resize(n+1, 1);
+        rnk.resize(n + 1, 1);
     }
 
-    int find(int x){
+    int find(int x) {
         if (p[x] == x) return x;
         return p[x] = find(p[x]);
     }
 
-    bool join(int a, int b){
+    bool join(int a, int b) {
         a = find(a); b = find(b);
         if (a == b) return false;
         if (rnk[a] > rnk[b]){
@@ -34,5 +34,3 @@ struct dsu{
     }
 };
  
-int main(){
-}
