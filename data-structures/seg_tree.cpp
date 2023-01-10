@@ -1,76 +1,87 @@
-#include <bits/stdc++.h>
+#include "bits/stdc++.h"
 using namespace std;
 
-struct node {
-    long long val;
-    node() {
-        val = 0;
-    }
-    node(long long x) {
-        val = x;
-    }
-    node operator+(const node &o) const {
-        node ans;
-        ans.val = val + o.val;
-        return ans;
-    }
-};
- 
-template<class i_t, class e_t>
-struct seg_tree{
-    int n;
-    vector<i_t> tree;
+#define endl '\n'
+typedef long long ll;
 
-    seg_tree(const vector<e_t> &a) {
+template<class T>
+struct seg_tree {
+    struct node {
+        ll x;
+
+        node() : x(0) {}
+        node(ll x) : x(x) {}
+
+        node operator + (const node &o) const {
+            return node(x + o.x);
+        }
+    };
+
+    int n;
+    vector<node> tree;
+
+    seg_tree(vector<T> a) {
         n = a.size();
         tree.resize(n * 4);
-        build(1, 1, n, a);
+        build(1, 0, n - 1, a);
     }
 
-    void build(int id, int l, int r, const vector<e_t> &a) {
-        if (l == r) tree[id] = i_t(a[l - 1]);
+    inline int left(int id) { return (id << 1); }
+    inline int right(int id) { return (id << 1) | 1; }
+
+    void build(int id, int l, int r, const vector<T> &a) {
+        if (l == r) tree[id] = node(a[l]);
         else {
-            int m = (l + r)>>1;
-            build(id<<1, l, m, a);
-            build(id<<1|1, m + 1, r, a);
-            tree[id] = tree[id<<1] + tree[id<<1|1];
+            int m = (l + r) >> 1;
+            build(left(id), l, m, a);
+            build(right(id), m + 1, r, a);
+            tree[id] = tree[left(id)] + tree[right(id)];
         }
     }
 
-    void update(int id, int l, int r, int pos, e_t val) {
-        if (l == r) tree[id] = i_t(val) + tree[id]; // merge / set
-        else{
-            int m = (l + r)>>1;
-            if (pos <= m) update(id<<1, l, m, pos, val);
-            else update(id<<1|1, m + 1, r, pos, val);
-            tree[id] = tree[id<<1] + tree[id<<1|1];
+    void update(int id, int l, int r, int pos, T val) {
+        if (l == r) tree[id] = node(val);
+        else {
+            int mid = (l + r) >> 1;
+            if (pos <= mid) update(left(id), l, mid, pos, val);
+            else update(right(id), mid + 1, r, pos, val);
+            tree[id] = tree[left(id)] + tree[right(id)];
         }
     }
 
-    i_t query(int id, int l, int r, int lq, int rq) {
-        if (l > rq || r < lq) return i_t();
-        else if (lq <= l && r <= rq) return tree[id];
-        else{
-            int m = (l + r)>>1;
-            return query(id<<1, l, m, lq, rq) + query(id<<1|1, m + 1, r, lq, rq);
-        }
+    node query(int id, int l, int r, int lq, int rq) {
+        if (l > rq || r < lq) return node();
+        if (lq <= l && r <= rq) return tree[id];
+        int mid = (l + r) >> 1;
+        return query(left(id), l, mid, lq, rq) + query(right(id), mid + 1, r, lq, rq);
     }
-    void update(int pos, e_t val) { update(1, 1, n, pos, val); }
-    i_t query(int l, int r) { return query(1, 1, n, l, r); }
+
+    void update(int pos, T val) { update(1, 0, n - 1, pos, val); }
+    node query(int l, int r) { return query(1, 0, n - 1, l, r); }
 };
 
-int main() {
-    ios_base::sync_with_stdio(0);
-    cin.tie(0);
-
+void solvetask() {
     int n, q; cin >> n >> q;
-    vector<long long> a(n);
-    for (int i = 0; i < n; i++) cin >> a[i];
-    seg_tree<node, long long> stree(a);
 
-    while(q--){
-        long long tp, x, y; cin >> tp >> x >> y;
-        if (tp == 0) stree.update(1, 1, n, x + 1, y);
-        else cout << stree.query(1, 1, n, x + 1, y).val << '\n';
+    vector<ll> a(n);
+    for (int i = 0; i < n; i++) cin >> a[i];
+    seg_tree<ll> s(a);
+
+    while (q--) {
+        int tp; cin >> tp;
+        if (tp == 1) {
+            int i, v; cin >> i >> v;
+            s.update(i, v);
+        } else {
+            int l, r; cin >> l >> r;
+            cout << s.query(l, r - 1).x << endl;
+        }
     }
 }
+
+int main() {
+    ios_base::sync_with_stdio(0); cin.tie(0);
+    int t = 1;
+    while(t--) solvetask();
+}
+

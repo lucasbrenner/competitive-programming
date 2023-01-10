@@ -1,87 +1,110 @@
-#include <bits/stdc++.h>
+#include "bits/stdc++.h"
 using namespace std;
 
-template<typename T>
-struct seg_tree{
-    int n;
-    vector<T> tree, start, lazy;
+#define endl '\n'
+typedef long long ll;
 
-    seg_tree(vector<T> start_) : start(start_){
-        n = start_.size();
+template<class T>
+struct seg_tree {
+    struct node {
+        ll x;
+
+        node() : x(0) {}
+        node(ll x) : x(x) {}
+
+        node operator+(const node &o) const {
+            return node(x + o.x);
+        }
+    };
+
+    struct lazy_node {
+        ll x;
+
+        lazy_node() : x(0) {}
+    };
+
+    int n;
+    vector<node> tree;
+    vector<lazy_node> lazy;
+
+    seg_tree(vector<T> a) {
+        n = a.size();
         tree.resize(n * 4);
         lazy.resize(n * 4);
-        build(1, 1, n);
+        build(1, 0, n - 1, a);
     }
 
-    seg_tree(int n_) : seg_tree(vector<T>(n_)) {}
+    inline int left(int id) { return (id << 1); }
+    inline int right(int id) { return (id << 1) | 1; }
 
-    T identity(){
-        return 0;
-    }
-
-    T merge(T a, T b){
-        return a + b;
-    }
-    
-    void build(int id, int l, int r){
-        if (l == r) tree[id] = start[l-1];
-        else{
-            int m = (l+r)>>1;
-            build(id<<1, l, m);
-            build(id<<1|1, m+1, r);
-            tree[id] = merge(tree[id<<1], tree[id<<1|1]);
+    void build(int id, int l, int r, const vector<T> &a) {
+        if (l == r) tree[id] = node(a[l]);
+        else {
+            int m = (l + r) >> 1;
+            build(left(id), l, m, a);
+            build(right(id), m + 1, r, a);
+            tree[id] = tree[left(id)] + tree[right(id)];
         }
     }
 
-    void prop(int id, int l, int r){
-        if (lazy[id]){
-            tree[id] += lazy[id] * (r - l + 1); // merge / set
-            if (l != r){
-                lazy[id<<1] += lazy[id];
-                lazy[id<<1|1] += lazy[id];
-            }
-            lazy[id] = 0;
+    inline void push(int id, int l, int r) {
+        if (!lazy[id].x) return;
+
+        tree[id].x += (r - l + 1ll) * lazy[id].x;
+
+        if (l != r) {
+            lazy[left(id)].x += lazy[id].x;
+            lazy[right(id)].x += lazy[id].x;
+        }
+        lazy[id].x = 0;
+    }
+
+    void update(int id, int l, int r, int lq, int rq, T val) {
+        if (l > rq || r < lq) return;
+        if (lq <= l && r <= rq) {
+            lazy[id].x += val;
+            push(id, l, r);
+        } else {
+            push(id, l, r);
+            int mid = (l + r) >> 1;
+            update(left(id), l, mid, lq, rq, val);
+            update(right(id), mid + 1, r, lq, rq, val);
+            tree[id] = tree[left(id)] + tree[right(id)];
         }
     }
 
-    void upd(int id, int l, int r, int lq, int rq, T val){
-        if (l > rq || r < lq) prop(id, l, r);
-        else if (lq <= l && r <= rq){
-            lazy[id] += val;
-            prop(id, l, r);
-        } else{
-            prop(id, l, r);
-            int m = (l+r)>>1;
-            upd(id<<1, l, m, lq, rq, val);
-            upd(id<<1|1, m+1, r, lq, rq, val);
-            tree[id] = merge(tree[id<<1], tree[id<<1|1]);
-        }
-    }
-
-    T qry(int id, int l, int r, int lq, int rq){
-        prop(id, l, r);
-        if (l > rq || r < lq) return identity();
+    node query(int id, int l, int r, int lq, int rq) {
+        push(id, l, r);
+        if (l > rq || r < rq) return node();
         if (lq <= l && r <= rq) return tree[id];
-        int m = (l+r)>>1;
-        return merge(qry(id<<1, l, m, lq, rq), qry(id<<1|1, m+1, r, lq, rq));
+        int mid = (l + r) >> 1;
+        return query(left(id), l, mid, lq, rq) + query(right(id), mid + 1, r, lq, rq);
     }
 
-    void upd(int pos, T val){upd(1, 1, n, pos, pos, val);}
-    void upd(int l, int r, T val){upd(1, 1, n, l, r, val);}
-    T qry(int l, int r){return qry(1, 1, n ,l, r);}
-    T qry(int pos){return qry(1, 1, n , pos, pos);}
+    void update(int l, int r, T val) { update(1, 0, n - 1, l, r, val); }
+    node query(int l, int r) { return query(1, 0, n - 1, l, r); }
 };
 
-int main(){
-    ios_base::sync_with_stdio(0);
-    cin.tie(0);
+void solvetask() {
+    int n, q; cin >> n >> q;
 
-    vector<long long> a(3, 50);
-    seg_tree<long long> stree(a);
+    seg_tree<ll> s((vector<ll>(n)));
 
-    seg_tree<int> stree1(10);
-    stree1.upd(5, 10, -3);
-    stree1.upd(3, 5, 7);
-    cout << stree1.qry(5) << endl;
-    cout << stree1.qry(10) << endl;
+    while (q--) {
+        int tp; cin >> tp;
+        if (tp == 1) {
+            int l, r, v; cin >> l >> r >> v;
+            s.update(l, r - 1, v);
+        } else {
+            int pos; cin >> pos;
+            cout << s.query(pos, pos).x << endl;
+        }
+    }
 }
+
+int main() {
+    ios_base::sync_with_stdio(0); cin.tie(0);
+    int t = 1;
+    while(t--) solvetask();
+}
+
