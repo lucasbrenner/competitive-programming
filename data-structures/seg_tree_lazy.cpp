@@ -75,7 +75,7 @@ struct seg_tree {
 
     node query(int id, int l, int r, int lq, int rq) {
         push(id, l, r);
-        if (l > rq || r < rq) return node();
+        if (l > rq || r < lq) return node();
         if (lq <= l && r <= rq) return tree[id];
         int mid = (l + r) >> 1;
         return query(left(id), l, mid, lq, rq) + query(right(id), mid + 1, r, lq, rq);
