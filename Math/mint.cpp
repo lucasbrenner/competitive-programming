@@ -55,3 +55,5 @@ U& operator >> (U& is, mint<mod>& number) {
     return is;
 }
 
+using Int = mint<1'000'000'007>;
+
