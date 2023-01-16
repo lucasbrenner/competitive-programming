@@ -22,7 +22,9 @@ template<typename T> struct treap {
         return t ? t->cnt : 0;
     }
     void recalc(pnode t) {
-        if (t) t->cnt = 1 + cnt(t->l) + cnt(t->r);
+        if (t) {
+            t->cnt = 1 + cnt(t->l) + cnt(t->r);
+        }
     }
     void push(pnode t) {
         if (t && t->rev) {
@@ -34,9 +36,9 @@ template<typename T> struct treap {
     }
 
     void split(pnode t, pnode &l, pnode &r, int pos) {
-        if (t == nullptr) return void(l = r = nullptr);
+        if (!t) return void(l = r = nullptr);
         push(t);
-        if (cnt(t->l) + 1 <= pos) split(t->r, t->r, r, pos - cnt(t->l) - 1), l = t;
+        if (cnt(t->l) < pos) split(t->r, t->r, r, pos - cnt(t->l) - 1), l = t;
         else split(t->l, l, t->l, pos), r = t;
         recalc(t);
     }
@@ -57,13 +59,14 @@ template<typename T> struct treap {
     }
 
     void erase(pnode &t, int pos) {
-        if (cnt(t->l) + 1 == pos) {
+        if (cnt(t->l) == pos) {
             pnode tmp = t;
             merge(t, t->l, t->r);
             delete tmp;
         }
-        else if (cnt(t->l) + 1 <= pos) erase(t->r, pos - cnt(t->l) - 1);
+        else if (cnt(t->l) < pos) erase(t->r, pos - cnt(t->l) - 1);
         else erase(t->l, pos);
+        recalc(t);
     }
     void erase(int pos) { erase(root, pos); }
 
@@ -90,14 +93,15 @@ template<typename T> struct treap {
         merge(root, root, e);
     }
 
-    void print(pnode t) {
-        if (!t) return;
-        push(t);
-        print(t->l);
-        cout << t->val << " ";
-        print(t->r);
+    int get(int l, int r) {
+        pnode a, b, c;
+        split(root, a, b, l);
+        split(b, b, c, r - l + 1);
+        int ans = b->val;
+        merge(root, a, b);
+        merge(root, root, c);
+        return ans;
     }
-    void print() { print(root); cout << endl; }
 
     treap() {}
     treap(vector<T> &a) {
@@ -106,27 +110,14 @@ template<typename T> struct treap {
             insert(a[i], i);
         }
     }
-};
 
-void solvetask() {
-    int n; cin >> n;
-    vector<int> a(n);
-    for (int i = 0; i < n; i++) a[i] = i + 1;
-    treap<int> t(a);
-
-    for (int i = 0; i < n; i++) {
-        int p1, p2; cin >> p1 >> p2;
-        if (p1 >= p2) continue;
-        p1--, p2--;
-        int len = min(p2 - p1, n - p2);
-        t.swap_ranges(p1, p1 + len - 1, p2, p2 + len - 1);
+    void print(pnode t) {
+        if (!t) return;
+        push(t);
+        print(t->l);
+        cout << t->val << " ";
+        print(t->r);
     }
-    t.print();
-}
-
-int main() {
-    ios_base::sync_with_stdio(0); cin.tie(0);
-    int t = 1;
-    while(t--) solvetask();
-}
+    void print() { print(root); cout << endl; }
+};
 
