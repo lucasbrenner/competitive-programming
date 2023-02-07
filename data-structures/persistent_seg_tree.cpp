@@ -4,12 +4,23 @@ using namespace std;
 #define endl '\n'
 typedef long long ll;
 
-struct persistent_seg_tree {
+// 1-indexed
+struct seg_tree {
     struct node {
         int x;
         int l, r;
-        node () : x(0), l(-1), r(-1) {}
-        node (int val) : x(val), l(-1), r(-1) {}
+        node () : l(-1), r(-1) {
+            x = 0;
+        }
+        node (int val) : l(-1), r(-1) {
+            x = val;
+        }
+
+        node operator + (const node &oth) const {
+            node ans;
+            ans.x = x + oth.x;
+            return ans;
+        }
     };
 
     vector<node> nodes;
@@ -18,16 +29,15 @@ struct persistent_seg_tree {
         return (int)nodes.size() - 1;
     }
     int create(int l, int r) {
-        nodes.push_back(node());
+        nodes.push_back(nodes[l] + nodes[r]);
         nodes.back().l = l, nodes.back().r = r;
-        nodes.back().x = nodes[l].x ^ nodes[r].x; // merge
         return (int)nodes.size() - 1;
     }
 
     vector<int> roots;
     int n;
 
-    persistent_seg_tree(vector<int> &a) : n(a.size()) {
+    seg_tree(vector<int> a) : n(a.size()) {
         roots.push_back(build(1, n, a));
     }
 
@@ -37,34 +47,25 @@ struct persistent_seg_tree {
         return create(build(l, mid, a), build(mid + 1, r, a));
     }
 
-    int update(int v, int l, int r, int pos, int val) {
-        if (l == r) return create(val ^ nodes[v].x); // merge / set
+    int update(int l, int r, int pos, int val, int v) {
+        if (l == r) return create(val + nodes[v].x); // add / set
         int mid = (l + r) / 2;
-        if (pos <= mid) return create(update(nodes[v].l, l, mid, pos, val), nodes[v].r);
-        return create(nodes[v].l, update(nodes[v].r, mid + 1, r, pos, val));
+        if (pos <= mid) return create(update(l, mid, pos, val, nodes[v].l), nodes[v].r);
+        return create(nodes[v].l, update(mid + 1, r, pos, val, nodes[v].r));
     }
 
-    int query(int v, int l, int r, int lq, int rq) {
-        if (lq <= l && r <= rq) return nodes[v].x;
-        if (l > rq || r < lq) return 0;
+    node query(int l, int r, int lq, int rq, int v) {
+        if (lq <= l && r <= rq) return nodes[v];
+        if (l > rq || r < lq) return node();
         int mid = (l + r) / 2;
-        return query(nodes[v].l, l, mid, lq, rq) ^ query(nodes[v].r, mid + 1, r, lq, rq); // merge
+        return query(l, mid, lq, rq, nodes[v].l) + query(mid + 1, r, lq, rq, nodes[v].r);
     }
 
-    int fst(int vl, int vr, int l, int r) {
-        if (l == r) return l;
-        int mid = (l + r) / 2;
-        if (nodes[nodes[vr].l].x ^ nodes[nodes[vl].l].x) return fst(nodes[vl].l, nodes[vr].l, l, mid);
-        return fst(nodes[vl].r, nodes[vr].r, mid + 1, r);
+    void update(int pos, int val, int version = -1) {
+        version = (version == -1 ? roots.back() : roots[version]);
+        roots.push_back(update(1, n, pos, val, version));
     }
-
-    // 1-indexed
-    void update(int pos, int val) { roots.push_back(update(roots.back(), 1, n, pos, val)); }
-    int query(int version, int l, int r) { return query(roots[version], 1, n, l, r); }
-    int fst(int l, int r) {
-        l--;
-        if ((nodes[roots[r]].x ^ nodes[roots[l]].x) == 0) return -1;
-        return fst(roots[l], roots[r], 1, n);
-    }
+    node query(int l, int r, int version) { return query(1, n, l, r, roots[version]); }
 };
+
 
