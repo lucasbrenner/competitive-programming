@@ -9,7 +9,7 @@ struct lca {
     lca(int n) : n(n) {
         lg = 33 - __builtin_clz(n);
         adj.resize(n + 1);
-        anc = vector<vector<int>>(n, vector<int>(lg));
+        anc = vector<vector<int>>(n + 1, vector<int>(lg));
         depth.resize(n + 1);
     }
 
@@ -42,7 +42,7 @@ struct lca {
         if (depth[a] < depth[b]) swap(a, b);
 
         for (int i = lg - 1; i >= 0; i--) {
-            if (depth[a] - depth[b]  >= (1 << i)) a = anc[a][i];
+            if (depth[a] - depth[b] >= (1 << i)) a = anc[a][i];
         }
         if (a == b) return a;
 
@@ -53,6 +53,17 @@ struct lca {
             }
         }
         return anc[a][0];
+    }
+
+    // k-th ancestor of v
+    int jump(int v, int k) {
+        for (int i = lg - 1; i >= 0; i--) {
+            if ((1 << i) <= k) {
+                v = anc[v][i];
+                k -= (1 << i);
+            }
+        }
+        return v;
     }
 };
 
