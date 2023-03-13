@@ -1,4 +1,4 @@
-#include"bits/stdc++.h"
+#include "bits/stdc++.h"
 using namespace std;
 
 struct lca {
@@ -53,6 +53,10 @@ struct lca {
             }
         }
         return anc[a][0];
+    }
+
+    int dist(int a, int b) {
+        return depth[a] + depth[b] - 2 * depth[get_lca(a, b)];
     }
 
     // k-th ancestor of v

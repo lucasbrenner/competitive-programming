@@ -1,8 +1,7 @@
 #include "bits/stdc++.h"
 using namespace std;
 
-template<typename T>
-struct rmq {
+template<typename T> struct rmq {
     vector<vector<T>> t;
 
     rmq() {}

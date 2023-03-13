@@ -4,8 +4,7 @@ using namespace std;
 #define endl '\n'
 typedef long long ll;
 
-template<class T>
-struct seg_tree {
+template<class T> struct seg_tree {
     struct node {
         ll x;
 
