@@ -14,7 +14,7 @@ template<typename T> struct min_queue {
     }
 
     void pop() {
-        while (!q.empty() && q.front().second == removed) q.pop_front();
+        if (!q.empty() && q.front().second == removed) q.pop_front();
         removed++;
     }
 };
