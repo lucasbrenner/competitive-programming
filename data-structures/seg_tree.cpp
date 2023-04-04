@@ -7,7 +7,6 @@ typedef long long ll;
 template<class T> struct seg_tree {
     struct node {
         ll x;
-
         node() : x(0) {}
         node(ll x) : x(x) {}
 
@@ -15,28 +14,12 @@ template<class T> struct seg_tree {
             return node(x + o.x);
         }
     };
-
     int n;
     vector<node> tree;
-
-    seg_tree(vector<T> a) {
-        n = a.size();
-        tree.resize(n * 4);
-        build(1, 0, n - 1, a);
-    }
+    seg_tree(int n_) : n(n_), tree(n * 4) {}
 
     inline int left(int id) { return (id << 1); }
     inline int right(int id) { return (id << 1) | 1; }
-
-    void build(int id, int l, int r, const vector<T> &a) {
-        if (l == r) tree[id] = node(a[l]);
-        else {
-            int m = (l + r) >> 1;
-            build(left(id), l, m, a);
-            build(right(id), m + 1, r, a);
-            tree[id] = tree[left(id)] + tree[right(id)];
-        }
-    }
 
     void update(int id, int l, int r, int pos, T val) {
         if (l == r) tree[id] = node(val);
@@ -62,9 +45,11 @@ template<class T> struct seg_tree {
 void solvetask() {
     int n, q; cin >> n >> q;
 
-    vector<ll> a(n);
-    for (int i = 0; i < n; i++) cin >> a[i];
-    seg_tree<ll> s(a);
+    seg_tree<ll> s(n);
+    for (int i = 0; i < n; i++) {
+        ll x; cin >> x;
+        s.update(i, x);
+    }
 
     while (q--) {
         int tp; cin >> tp;
