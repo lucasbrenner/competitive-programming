@@ -2,10 +2,8 @@
 #include "bits/stdc++.h"
 using namespace std;
 
-typedef long long ll;
-
 template <int... ArgsT> struct bit {
-    ll val = 0;
+    int val = 0;
     void update(int val) {
         this->val += val;
     }
@@ -25,14 +23,14 @@ template <int N, int... Ns> struct bit<N, Ns...> {
     }
     template<typename... Args>
     int query(int l, int r, Args... args) {
-        ll ans = 0;
+        int ans = 0;
         for (; r >= 1; ans += b[r].query(args...), r -= r & -r);
         for (--l; l >= 1; ans -= b[l].query(args...), l -= l & -l);
         return ans;
     }
     template<typename... Args>
     int pre(int idx, Args... args) {
-        ll ans = 0;
+        int ans = 0;
         for (; idx > 0; ans += b[idx].pre(args...), idx -= idx & -idx);
         return ans;
     }
