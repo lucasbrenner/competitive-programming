@@ -8,7 +8,7 @@ template<class T> struct seg_tree {
     struct node {
         ll x;
         node() : x(0) {}
-        node(ll x) : x(x) {}
+        node(T x) : x(x) {}
 
         node operator + (const node &o) const {
             return node(x + o.x);
