@@ -23,13 +23,13 @@ template<class T> struct pt {
         return os << "(" << p.x << ", " << p.y << ")";
     }
 };
-template <typename U, typename T>
+template<typename U, typename T>
 U& operator >> (U& is, pt<T> &p) {
     T x, y; is >> x >> y;
     p = pt(x, y);
     return is;
 }
-template <class T> int sgn(T x) { return (x > 0) - (x < 0); }
+template<class T> int sgn(T x) { return (x > 0) - (x < 0); }
 
 template<class T> bool on_segment(T a, T b, T p) {
     return p.cross(a, b) == 0 && (a - p).dot(b - p) <= 0;
@@ -38,7 +38,7 @@ template<class T> bool on_segment(T a, T b, T p) {
 template<class T> vector<T> seg_int(T a, T b, T c, T d) {
     auto oa = c.cross(d, a), ob = c.cross(d, b),
          oc = a.cross(b, c), od = a.cross(b, d);
-    if (sgn(oa) * sgn(ob) < 0 && sgn(oc) * sgn(od) < 0) 
+    if (sgn(oa) * sgn(ob) < 0 && sgn(oc) * sgn(od) < 0)
         return {(a * ob - b * oa) / (ob - oa)};
     set<T> s;
     if (on_segment(c, d, a)) s.insert(a);
@@ -46,5 +46,15 @@ template<class T> vector<T> seg_int(T a, T b, T c, T d) {
     if (on_segment(a, b, c)) s.insert(c);
     if (on_segment(a, b, d)) s.insert(d);
     return {s.begin(), s.end()};
+}
+
+template<class T> bool in_polygon(vector<T> &a, T p, bool strict = true) {
+    int ans = 0, n = a.size();
+    for (int i = 0; i < n; i++) {
+        int j = (i + 1) % n;
+        if (on_segment(a[i], a[j], p)) return !strict;
+        ans ^= ((p.y < a[i].y) - (p.y < a[j].y)) * p.cross(a[i], a[j]) > 0;
+    }
+    return ans;
 }
 
