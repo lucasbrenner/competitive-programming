@@ -1,3 +1,4 @@
+// https://victorlecomte.com/cp-geo.pdf
 #include "bits/stdc++.h"
 using namespace std;
 
