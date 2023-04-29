@@ -9,7 +9,7 @@ mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 template<typename T> struct treap {
     struct node {
         int p, rev, cnt;
-        int val;
+        T val;
         node *l, *r;
         node(T val_) : p(rng()), rev(0), cnt(1), l(nullptr), r(nullptr) {
             val = val_;
@@ -18,9 +18,7 @@ template<typename T> struct treap {
     typedef node* pnode;
     pnode root = nullptr;
 
-    int cnt(pnode t) {
-        return t ? t->cnt : 0;
-    }
+    int cnt(pnode t) { return t ? t->cnt : 0; }
     void recalc(pnode t) {
         if (t) {
             t->cnt = 1 + cnt(t->l) + cnt(t->r);
@@ -51,7 +49,7 @@ template<typename T> struct treap {
         recalc(t);
     }
 
-    void insert(T val, int pos) {
+    void insert(int pos, T val) {
         pnode a, b;
         split(root, a, b, pos);
         merge(a, a, new node(val));
@@ -70,7 +68,7 @@ template<typename T> struct treap {
     }
     void erase(int pos) { erase(root, pos); }
 
-    void reverse(pnode &t, int l, int r) {
+    void reverse(int l, int r) {
         if (l >= r) return;
         pnode a, b, c;
         split(root, a, b, l);
@@ -79,7 +77,6 @@ template<typename T> struct treap {
         merge(root, a, b);
         merge(root, root, c);
     }
-    void reverse(int l, int r) { reverse(root, l, r); }
 
     void swap_ranges(int l1, int r1, int l2, int r2) {
         pnode a, b, c, d, e;
@@ -93,7 +90,7 @@ template<typename T> struct treap {
         merge(root, root, e);
     }
 
-    int get(int l, int r) {
+    T get(int l, int r) {
         pnode a, b, c;
         split(root, a, b, l);
         split(b, b, c, r - l + 1);
@@ -103,12 +100,8 @@ template<typename T> struct treap {
         return ans;
     }
 
-    treap() {}
     treap(vector<T> &a) {
-        root = nullptr;
-        for (int i = 0; i < a.size(); i++) {
-            insert(a[i], i);
-        }
+        for (int i = 0; i < (int)a.size(); i++) insert(i, a[i]);
     }
 
     void print(pnode t) {
