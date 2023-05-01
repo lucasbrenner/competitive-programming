@@ -5,7 +5,7 @@ using namespace std;
 typedef long long ll;
 
 struct aho_corasick {
-    const static int N = 5e5 + 10, K = 26, Q = 5e5 + 10;
+    enum { N = (int)5e5 + 10, K = 26, first = 'a' };
     struct node {
         int ch[K], cnt, link, p;
         vector<int> id;
@@ -15,11 +15,11 @@ struct aho_corasick {
         }
     } a[N];
     vector<int> adj[N];
-    int pt = 0, ans[Q];
+    int pt = 0, ans[N];
     void insert(const string &s, int id) {
         int cur = 0;
         for (char c : s) {
-            int x = c - 'a';
+            int x = c - first;
             if (a[cur].ch[x] == -1) {
                 pt++;
                 a[pt].p = cur;
@@ -30,10 +30,9 @@ struct aho_corasick {
         a[cur].id.push_back(id);
     }
     void build() {
-        queue<array<int, 2>> q;
-        q.push({0, 0});
-        while (!q.empty()) {
-            auto [v, c] = q.front(); q.pop();
+        queue<pair<int, int>> q;
+        for (q.emplace(0, 0); !q.empty(); q.pop()) {
+            auto [v, c] = q.front();
             if (a[v].p) {
                 int &link = a[v].link;
 
@@ -55,7 +54,7 @@ struct aho_corasick {
         memset(ans, 0, sizeof ans);
         int cur = 0;
         for (char c : s) {
-            int x = c - 'a';
+            int x = c - first;
             while (cur && a[cur].ch[x] == -1) {
                 cur = a[cur].link;
             }
@@ -85,6 +84,6 @@ int main() {
     }
     aho.build();
     aho.solve(s);
-    for (int i = 1; i <= q; i++) cout << aho.ans[i] << endl;
+    for (int i = 1; i <= q; i++) cout << (aho.ans[i] ? "YES" : "NO") << endl;
 }
 
