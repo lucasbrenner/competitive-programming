@@ -1,30 +1,30 @@
-// tested on https://cses.fi/problemset/task/2084/
+// https://codeforces.com/contest/1083/problem/E
 #include "bits/stdc++.h"
 using namespace std;
 
+#define endl '\n'
 typedef long long ll;
+mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 
 struct line {
     ll a, b;
     ll eval(ll x) {
         return a * x + b;
     }
-    ll inter(const line &oth) const {
-        ll num = -b + oth.b, den = a - oth.a;
-        if ((num < 0) ^ (den < 0)) return num / den;
-        num = abs(num), den = abs(den);
-        return - (num + den - 1) / den;
+    long double inter(const line &oth) const {
+        return (long double) (-b + oth.b) / (a - oth.a);
     }
 };
 
 // non-increasing slope, non-decreasing queries
+// max queries
 struct cht {
     deque<line> q;
     void add(ll a, ll b) {
         line cur = { a, b };
         while (q.size() > 1) {
             if (q.back().a == a) {
-                if (b >= q.back().b) return;
+                if (b <= q.back().b) return;
                 q.pop_back();
                 continue;
             }
@@ -34,8 +34,30 @@ struct cht {
         q.push_back(cur);
     }
     ll query(ll x) {
-        while (q.size() > 1 && q[0].eval(x) >= q[1].eval(x)) q.pop_front();
+        while (q.size() > 1 && q[0].eval(x) <= q[1].eval(x)) q.pop_front();
         return q[0].eval(x);
     }
 };
+
+void solvetask() {
+    int n; cin >> n;
+    vector<array<ll, 3>> a(n);
+    for (auto &[x, y, c] : a) cin >> x >> y >> c;
+    sort(a.begin(), a.end());
+    vector<ll> dp(n);
+    cht t;
+    t.add(0, 0);
+    for (int i = 0; auto [x, y, c] : a) {
+        dp[i] = t.query(y) + x * y - c;
+        t.add(-x, dp[i]);
+        i++;
+    }
+    cout << *max_element(dp.begin(), dp.end()) << endl;
+}
+
+int main() {
+    cin.tie(0)->sync_with_stdio(0);
+    int t = 1;
+    while(t--) solvetask();
+}
 
