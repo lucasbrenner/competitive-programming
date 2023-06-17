@@ -4,7 +4,7 @@ using namespace std;
 template<typename T> struct bit {
     int n;
     vector<T> a;
-    bit(int n) : n(n), a(n) {}
+    bit(int n) : n(n), a(n + 1) {}
     void add(int pos, T x) {
         for (; pos <= n; pos += (pos & -pos)) a[pos] += x;
     }
