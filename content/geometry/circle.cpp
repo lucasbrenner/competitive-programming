@@ -69,6 +69,7 @@ vector<pair<pt, pt>> tangents(pt c1, double r1, pt c2, double r2) {
     return out;
 }
 
+// Computes the minimum circle that encloses a set of points. O(N)
 pair<pt, double> mec(vector<pt> ps) {
     shuffle(all(ps), mt19937(time(0)));
     pt o = ps[0];
