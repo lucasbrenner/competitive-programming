@@ -1,4 +1,4 @@
-#include "mint.cpp"
+#include "../primitives/mint.cpp"
 
 const ll N = 2e5 + 1, mod = 1e9 + 7;
 Int fn[N], fd[N], iv[N];
