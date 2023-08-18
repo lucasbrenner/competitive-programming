@@ -1,25 +1,18 @@
-#include "bits/stdc++.h"
-using namespace std;
+#include "../contest/template.cpp"
  
-#define endl '\n'
- 
-struct bit {
+template<typename T> struct bit {
     int n;
-    vector<vector<int>> a;
-    bit (int n_) {
-        n = n_;
-        a = vector<vector<int>>(n + 1, vector<int>(n + 1));
-    }
- 
-    void add(int i, int j, int val) {
+    vector<vector<T>> a;
+    bit (int n) : n(n), a(n + 1, vector<int>(n + 1)) {}
+    void add(int i, int j, T val) {
         for (; i <= n; i += i & -i) {
             for (int pos = j; pos <= n; pos += pos & -pos) {
                 a[i][pos] += val;
             }
         }
     }
-    int query(int i, int j) {
-        int ans = 0;
+    T query(int i, int j) {
+        T ans = 0;
         for (; i > 0; i -= i & -i) {
             for (int pos = j; pos > 0; pos -= pos & -pos) {
                 ans += a[i][pos];

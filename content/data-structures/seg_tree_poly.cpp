@@ -1,9 +1,4 @@
-#include "bits/stdc++.h"
-using namespace std;
-
-#define endl '\n'
-typedef long long ll;
-mt19937 rng((int) chrono::steady_clock::now().time_since_epoch().count());
+#include "../contest/template.cpp"
 
 const ll mod = 1e9 + 7;
 
@@ -79,6 +74,7 @@ struct seg_tree {
         for (int i = 0; i < K; i++) lazy[id][i] = 0;
     }
 
+    // add f(i - l) to each i in [l, r]
     void update(int id, int l, int r, int lq, int rq, array<ll, K> val) {
         push(id, l, r);
         if (l > rq || r < lq) return;
@@ -105,27 +101,4 @@ struct seg_tree {
     void update(int l, int r, array<ll, K> val) { update(1, 0, n - 1, l, r, val); }
     node query(int l, int r) { return query(1, 0, n - 1, l, r); }
 };
-
-void solvetask() {
-    int n, q; cin >> n >> q;
-    vector<ll> a(n);
-    seg_tree s(a);
-
-    while (q--) {
-        int tp, l, r; cin >> tp >> l >> r;
-        l--, r--;
-        if (tp == 1) {
-            int len = r - l + 1;
-            s.update(l, r, { len, len - 1, -1 });
-        } else {
-            cout << s.query(l, r).sum << endl;
-        }
-    }
-}
- 
-int main() {
-    ios_base::sync_with_stdio(0); cin.tie(0);
-    int t = 1;
-    while(t--) solvetask();
-}
 

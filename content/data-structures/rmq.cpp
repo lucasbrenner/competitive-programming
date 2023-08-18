@@ -1,5 +1,4 @@
-#include "bits/stdc++.h"
-using namespace std;
+#include "../contest/template.cpp"
 
 template<typename T> struct rmq {
     vector<vector<T>> t;

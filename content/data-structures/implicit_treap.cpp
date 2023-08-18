@@ -1,8 +1,4 @@
-#include "bits/stdc++.h"
-using namespace std;
-
-#define endl '\n'
-typedef long long ll;
+#include "../contest/template.cpp"
 
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 
@@ -32,7 +28,6 @@ template<typename T> struct treap {
             if (t->r) t->r->rev ^= 1;
         }
     }
-
     void split(pnode t, pnode &l, pnode &r, int pos) {
         if (!t) return void(l = r = nullptr);
         push(t);
@@ -40,7 +35,6 @@ template<typename T> struct treap {
         else split(t->l, l, t->l, pos), r = t;
         recalc(t);
     }
-
     void merge(pnode &t, pnode a, pnode b) {
         push(a), push(b);
         if (!a || !b) return void(t = a ? a : b);
@@ -48,14 +42,12 @@ template<typename T> struct treap {
         else merge(b->l, a, b->l), t = b;
         recalc(t);
     }
-
     void insert(int pos, T val) {
         pnode a, b;
         split(root, a, b, pos);
         merge(a, a, new node(val));
         merge(root, a, b);
     }
-
     void erase(pnode &t, int pos) {
         if (cnt(t->l) == pos) {
             pnode tmp = t;
@@ -67,7 +59,6 @@ template<typename T> struct treap {
         recalc(t);
     }
     void erase(int pos) { erase(root, pos); }
-
     void reverse(int l, int r) {
         if (l >= r) return;
         pnode a, b, c;
@@ -77,7 +68,6 @@ template<typename T> struct treap {
         merge(root, a, b);
         merge(root, root, c);
     }
-
     void swap_ranges(int l1, int r1, int l2, int r2) {
         pnode a, b, c, d, e;
         split(root, a, b, l1);
@@ -89,7 +79,6 @@ template<typename T> struct treap {
         merge(root, root, b);
         merge(root, root, e);
     }
-
     T get(int l, int r) {
         pnode a, b, c;
         split(root, a, b, l);
@@ -99,11 +88,9 @@ template<typename T> struct treap {
         merge(root, root, c);
         return ans;
     }
-
     treap(vector<T> &a) {
         for (int i = 0; i < (int)a.size(); i++) insert(i, a[i]);
     }
-
     void print(pnode t) {
         if (!t) return;
         push(t);

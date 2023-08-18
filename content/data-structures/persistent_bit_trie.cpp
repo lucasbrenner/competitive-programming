@@ -1,9 +1,5 @@
 // tested on https://codeforces.com/group/XrhoJtxCjm/contest/422671/problem/H
-#include "bits/stdc++.h"
-using namespace std;
-
-#define endl '\n'
-typedef long long ll;
+#include "../contest/template.cpp"
 
 struct trie {
     struct node {
@@ -13,20 +9,16 @@ struct trie {
             cnt = 0;
         }
     };
-
     const static int ms = (500000) * 20, LG = 20;
     node buffer[ms];
     int CNT = 1;
     vector<int> vs = { 0 };
-
     int get_cnt(int v) {
         return v == -1 ? 0 : buffer[v].cnt;
     }
-
     int get_ch(int v, int bit) {
         return v == -1 ? -1 : buffer[v].ch[bit];
     }
-
     int insert(int v, int x, int bit) {
         int ans = CNT++;
         if (bit < 0) {
@@ -42,7 +34,6 @@ struct trie {
     void insert(int x) {
         vs.push_back(insert(vs.back(), x, LG));
     }
-
     int xor_max(int vl, int vr, int x, int bit) {
         if (bit < 0) return 0;
 
@@ -62,28 +53,4 @@ struct trie {
         }
     }
 };
-
-void solvetask() {
-    int q; cin >> q;
-    trie t;
-    while (q--) {
-        int tp; cin >> tp;
-        if (tp == 0) {
-            int x; cin >> x;
-            t.insert(x);
-        } else if (tp == 1) {
-            int l, r, x; cin >> l >> r >> x;
-            cout << (t.xor_max(l, r, x) ^ x) << endl;
-        } else {
-            int k; cin >> k;
-            t.erase(k);
-        }
-    }
-}
-
-int main() {
-    ios_base::sync_with_stdio(0); cin.tie(0);
-    int t = 1;
-    while(t--) solvetask();
-}
 

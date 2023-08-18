@@ -1,12 +1,8 @@
 // tested on https://atcoder.jp/contests/abc256/tasks/abc256_h
 // O(Q * logN * logA)
-#include "bits/stdc++.h"
-using namespace std;
-
-#define endl '\n'
-#define all(x) (x).begin(), (x).end()
-typedef long long ll;
-mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+// update each a_i in [l, r] to val
+// update each a_i in [l, r] to floor(a_i / x)
+#include "../contest/template.cpp"
 
 template<class T> struct seg_tree {
     struct node {
@@ -19,7 +15,6 @@ template<class T> struct seg_tree {
             sum = al = x;
             eq = 1;
         }
-
         node operator + (const node &o) const {
             node ans;
             if (eq == -1) {
@@ -124,32 +119,4 @@ template<class T> struct seg_tree {
     void update_div(int l, int r, int x) { update_div(1, 0, n - 1, l, r, x); }
     node query(int l, int r) { return query(1, 0, n - 1, l, r); }
 };
-
-void solvetask() {
-    int n, q; cin >> n >> q;
-    vector<ll> a(n);
-    for (ll &x : a) cin >> x;
-
-    seg_tree<ll> s(a);
-
-    while (q--) {
-        int tp, l, r; cin >> tp >> l >> r;
-        l--, r--;
-        if (tp == 1) {
-            int x; cin >> x;
-            s.update_div(l, r, x);
-        } else if (tp == 2) {
-            int x; cin >> x;
-            s.update(l, r, x);
-        } else {
-            cout << s.query(l, r).sum << endl;
-        }
-    }
-}
- 
-int main() {
-    cin.tie(0)->sync_with_stdio(0);
-    int tc = 1;
-    while(tc--) solvetask();
-}
 

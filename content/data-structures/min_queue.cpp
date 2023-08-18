@@ -1,5 +1,4 @@
-#include "bits/stdc++.h"
-using namespace std;
+#include "../contest/template.cpp"
 
 template<typename T> struct min_queue {
     int added = 0, removed = 0;
