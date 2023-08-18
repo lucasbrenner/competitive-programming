@@ -1,7 +1,4 @@
-#include"bits/stdc++.h"
-using namespace std;
-
-typedef long long ll;
+#include "../contest/template.cpp"
 
 struct poly_hash {
     const static int N = 2e6 + 10, K = 2;

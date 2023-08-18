@@ -1,7 +1,4 @@
-#include"bits/stdc++.h"
-using namespace std;
-
-#define endl '\n'
+#include "../contest/template.cpp"
 
 vector<int> manacher(const string &s) {
     string t = "$#";
@@ -24,11 +21,3 @@ vector<int> manacher(const string &s) {
     return a;
 }
 
-int main() {
-    ios_base::sync_with_stdio(false);
-    cin.tie(0);
-
-    string s = "abacaba";
-    vector<int> m = manacher(s);
-    for (int i = 0; i < m.size(); i++) cout << m[i] << " \n"[i == m.size() - 1];
-}

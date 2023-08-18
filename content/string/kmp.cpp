@@ -1,5 +1,4 @@
-#include"bits/stdc++.h"
-using namespace std;
+#include "../contest/template.cpp"
 
 vector<int> kmp(const string &s) {
     int n = s.size();
