@@ -1,7 +1,8 @@
-#include"bits/stdc++.h"
-using namespace std;
-
-typedef long long ll;
+// primitiva para matrizes
+// matrix<int, 2> fib;
+// fib.a = {{ {{1, 1}}, {{1, 0}} }};
+    
+#include "../contest/template.cpp"
 
 template<typename T, int N> struct matrix {
     array<array<T, N>, N> a{};
@@ -33,15 +34,4 @@ template<typename T, int N> struct matrix {
         return ans;
     }
 };
-
-int main() {
-    matrix<int, 2> fib;
-    fib.a = {{ {{1, 1}}, {{1, 0}} }};
-    vector<int> aux = { 1, 1 };
-    
-    for (int i = 0; i < 10; i++) {
-        cout << i + 1 << "-th term of fibonacci is ";
-        cout << ((fib ^ i) * aux)[0] << endl;
-    }
-}
 

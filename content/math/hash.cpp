@@ -1,10 +1,4 @@
-#include "bits/stdc++.h"
-using namespace std;
-
-#define endl '\n'
-typedef long long ll;
-
-std::mt19937 rng((int) std::chrono::steady_clock::now().time_since_epoch().count());
+#include "../contest/template.cpp"
 
 const int MOD_COUNT = 3;
 const ll BASE[] = { 104000711, 104000717, 1000000007 };

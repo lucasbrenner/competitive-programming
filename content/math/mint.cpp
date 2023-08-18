@@ -1,7 +1,4 @@
-#include"bits/stdc++.h"
-using namespace std;
-
-typedef long long ll;
+#include "../contest/template.cpp"
 
 template<int mod = 1'000'000'007>
 struct mint {
@@ -35,17 +32,9 @@ struct mint {
     mint operator / (mint o) const { return mint(*this) /= o; }
     mint operator ^ (ll o) const { return mint(*this) ^= o; }
     bool operator < (mint o) const { return x < o.x; }
-    bool operator > (mint o) const { return x > o.x; }
-    bool operator <= (mint o) const { return x <= o.x; }
-    bool operator >= (mint o) const { return x >= o.x; }
     bool operator == (mint o) const { return x == o.x; }
     bool operator != (mint o) const { return x != o.x; }
 };
-
-template <typename U, int mod>
-U& operator << (U& os, const mint<mod>& number) {
-    return os << number.x;
-}
 
 template <typename U, int mod>
 U& operator >> (U& is, mint<mod>& number) {

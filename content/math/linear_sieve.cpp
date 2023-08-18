@@ -1,5 +1,4 @@
-#include"bits/stdc++.h"
-using namespace std;
+#include "../contest/template.cpp"
 
 const int MAX = 1e7;
 int lp[MAX + 1];
