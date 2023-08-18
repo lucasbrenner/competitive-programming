@@ -1,11 +1,6 @@
 // tested at https://cses.fi/problemset/task/2134/
 // based on https://github.com/kth-competitive-programming/kactl/blob/main/content/graph/HLD.h
-#include "bits/stdc++.h"
-using namespace std;
-
-#define endl '\n'
-typedef long long ll;
-mt19937 rng((int) chrono::steady_clock::now().time_since_epoch().count());
+#include "../contest/template.cpp"
 
 template<class T> struct seg_tree {
     struct node {
@@ -48,10 +43,10 @@ template<class T> struct seg_tree {
 template<bool EDGES> struct hld {
     int n, cnt = 0;
     vector<vector<int>> adj;
-    vector<int> pr, sz, dep, tp, idx;
+    vector<int> pr, siz, dep, tp, idx;
     seg_tree<int> tree;
     hld(vector<vector<int>> adj_)
-        : adj(adj_), n(adj_.size()), pr(n, -1), sz(n, 1), dep(n),
+        : adj(adj_), n(adj_.size()), pr(n, -1), siz(n, 1), dep(n),
         tp(n), idx(n), tree(n) {
         dfs_sz(0);
         dfs(0);
@@ -61,8 +56,8 @@ template<bool EDGES> struct hld {
         for (int &ch : adj[v]) {
             pr[ch] = v, dep[ch] = dep[v] + 1;
             dfs_sz(ch);
-            sz[v] += sz[ch];
-            if (sz[ch] > sz[adj[v][0]]) swap(ch, adj[v][0]);
+            siz[v] += siz[ch];
+            if (siz[ch] > siz[adj[v][0]]) swap(ch, adj[v][0]);
         }
     }
     void dfs(int v) {
@@ -93,42 +88,7 @@ template<bool EDGES> struct hld {
         return ans;
     }
     int query_subtree(int v) {
-        return tree.query(idx[v] + EDGES, idx[v] + sz[v] - 1).x;
+        return tree.query(idx[v] + EDGES, idx[v] + siz[v] - 1).x;
     }
 };
-
-void solvetask() {
-    int n, q; cin >> n >> q;
-    vector<vector<int>> adj(n);
-    vector<int> a(n);
-    for (int i = 0; i < n; i++) cin >> a[i];
-    for (int i = 0; i < n - 1; i++) {
-        int u, v; cin >> u >> v;
-        u--, v--;
-        adj[u].push_back(v);
-        adj[v].push_back(u);
-    }
-    hld<false> g(adj);
-    for (int i = 0; i < n; i++) g.update_vertex(i, a[i]);
-
-    while (q--) {
-        int tp; cin >> tp;
-        if (tp == 1) {
-            int v, x; cin >> v >> x;
-            v--;
-            g.update_vertex(v, x);
-        } else {
-            int u, v; cin >> u >> v;
-            u--, v--;
-            cout << g.query(u, v) << " ";
-        }
-    }
-    cout << endl;
-}
  
-int main() {
-    ios_base::sync_with_stdio(0); cin.tie(0);
-    int t = 1;
-    while(t--) solvetask();
-}
-

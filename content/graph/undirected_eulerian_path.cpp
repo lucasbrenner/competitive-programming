@@ -1,10 +1,9 @@
 // https://cses.fi/problemset/task/1691/
-#include "bits/stdc++.h"
-using namespace std;
+#include "../contest/template.cpp"
 
 #define endl '\n'
 
-int main() {
+void solve() {
     ios_base::sync_with_stdio(0); cin.tie(0);
 
     int n, m; cin >> n >> m;
@@ -19,7 +18,7 @@ int main() {
     for (int i = 1; i <= n; i++) {
         if (adj[i].size() % 2 == 1) {
             cout << "IMPOSSIBLE" << endl;
-            return 0;
+            return;
         }
     }
     vector<int> ans, vis(m);
