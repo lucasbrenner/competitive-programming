@@ -3,12 +3,12 @@ struct pt {
 
     T x, y;
     explicit pt(T x=0, T y=0) : x(x), y(y) {}
-    bool operator<(pt p) const { return tie(x,y) < tie(p.x,p.y); }
-    bool operator==(pt p) const { return tie(x,y)==tie(p.x,p.y); }
-    pt operator+(pt p) const { return pt(x+p.x, y+p.y); }
-    pt operator-(pt p) const { return pt(x-p.x, y-p.y); }
-    pt operator*(T d) const { return pt(x*d, y*d); }
-    pt operator/(T d) const { return pt(x/d, y/d); }
+    bool operator < (pt p) const { return tie(x,y) < tie(p.x,p.y); }
+    bool operator == (pt p) const { return tie(x,y)==tie(p.x,p.y); }
+    pt operator + (pt p) const { return pt(x+p.x, y+p.y); }
+    pt operator - (pt p) const { return pt(x-p.x, y-p.y); }
+    pt operator * (T d) const { return pt(x*d, y*d); }
+    pt operator / (T d) const { return pt(x/d, y/d); }
     T dot(pt p) const { return x*p.x + y*p.y; }
     T cross(pt p) const { return x*p.y - y*p.x; }
     T cross(pt &a, pt &b) const { return (a-*this).cross(b-*this); }
@@ -18,11 +18,16 @@ struct pt {
     pt unit() const { return *this/dist(); } // makes dist()=1
     pt perp() const { return pt(-y, x); } // rotates +90 degrees
     pt normal() const { return perp().unit(); } 
-
+    friend ostream& operator << (ostream &os, pt p) {
+        return os << "(" << p.x << ", " << p.y << ")";}
     T ori(pt a, pt b) const { T f = cross(a, b); return (f < 0 ? -1 : (f > 0 ? 1 : 0)); }    
     pt r90cw(){ return pt(y, -x);} // rotate 90 degrees clock wise
     pt r90ccw(){ return pt(-y, x);} // rotate 90 degrees counter clock wise 
 };
+bool onSegment(pt &s, pt &e, pt &p) {
+    return p.cross(s, e) == 0 && (s - p).dot(e - p) <= 0;
+}
+int sgn(ll x) { return (x > 0) - (x < 0); }
 
 double areaPoly(vector<pt> &poly) {
     assert(3<=sz(poly));
