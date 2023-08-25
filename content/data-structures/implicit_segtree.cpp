@@ -1,33 +1,21 @@
-#include "bits/stdc++.h"
-using namespace std;
-
-#define endl '\n'
-typedef long long ll;
-std::mt19937 rng((int) std::chrono::steady_clock::now().time_since_epoch().count());
+#include "../contest/template.cpp"
 
 struct Data {
     ll sum;
-    Data() {
-        sum = 0;
-    }
+    Data() { sum = 0; }
     Data operator + (const Data &oth) const {
         Data ans;
         ans.sum = sum + oth.sum;
         return ans;
     }
 };
-
 struct Vertex {
     int l, r;
     Data info;
     Vertex *lc = nullptr, *rc = nullptr;
-
-    Vertex(int lb, int rb) {
-        l = lb;
-        r = rb;
+    Vertex(int lb, int rb) : l(lb), r(lb) {
         info.sum = 0;
     }
-
     void extend() {
         if (!lc && l != r) {
             int mid = (l + r) / 2;
@@ -35,7 +23,6 @@ struct Vertex {
             rc = new Vertex(mid + 1, r);
         }
     }
-
     void update(int pos, int val) {
         if (l == r) {
             info.sum = val;
@@ -47,7 +34,6 @@ struct Vertex {
             info = lc->info + rc->info;
         }
     }
-
     Data query(int lq, int rq) {
         if (lq <= l && r <= rq) return info;
         if (l > rq || r < lq) return Data();

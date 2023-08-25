@@ -29,6 +29,11 @@ bool onSegment(pt &s, pt &e, pt &p) {
 }
 int sgn(ll x) { return (x > 0) - (x < 0); }
 
+bool onSegment(pt &s, pt &e, pt &p) {
+    return p.cross(s, e) == 0 && (s - p).dot(e - p) <= 0;
+}
+int sgn(ll x) { return (x > 0) - (x < 0); }
+
 double areaPoly(vector<pt> &poly) {
     assert(3<=sz(poly));
     ll area=poly.back().cross(poly[0]);

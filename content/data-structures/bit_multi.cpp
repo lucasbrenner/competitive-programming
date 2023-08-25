@@ -1,18 +1,11 @@
 // adapted from https://codeforces.com/blog/entry/64914
-#include "bits/stdc++.h"
-using namespace std;
+#include "../contest/template.cpp"
 
 template <int... ArgsT> struct bit {
     int val = 0;
-    void update(int val) {
-        this->val += val;
-    }
-    int query() {
-        return val;
-    }
-    int pre() {
-        return val;
-    }
+    void update(int val) { this->val += val; }
+    int query() { return val; }
+    int pre() { return val; }
 };
 
 template <int N, int... Ns> struct bit<N, Ns...> {
@@ -35,12 +28,4 @@ template <int N, int... Ns> struct bit<N, Ns...> {
         return ans;
     }
 };
-
-int main() {
-    bit<3, 2> b;
-    b.update(1, 1, 7);
-    b.update(2, 2, 3);
-    cout << b.query(1, 2, 2, 2) << endl;
-    cout << b.pre(3, 2) << endl;
-}
 

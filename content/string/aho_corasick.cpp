@@ -1,8 +1,6 @@
-#include "bits/stdc++.h"
-using namespace std;
-
-#define endl '\n'
-typedef long long ll;
+// aho.build()
+// aho.solve(s)
+#include "../contest/template.cpp"
 
 struct aho_corasick {
     enum { N = (int)5e5 + 10, K = 26, first = 'a' };
@@ -72,18 +70,4 @@ struct aho_corasick {
         return a[v].cnt;
     }
 };
-
-int main() {
-    ios_base::sync_with_stdio(0); cin.tie(0);
-    aho_corasick aho;
-    string s; cin >> s;
-    int q; cin >> q;
-    for (int i = 1; i <= q; i++) {
-        string t; cin >> t;
-        aho.insert(t, i);
-    }
-    aho.build();
-    aho.solve(s);
-    for (int i = 1; i <= q; i++) cout << (aho.ans[i] ? "YES" : "NO") << endl;
-}
 

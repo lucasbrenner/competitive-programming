@@ -1,8 +1,8 @@
-#include"bits/stdc++.h"
-using namespace std;
+#include "../contest/template.cpp"
 
 const int N = 1e6 + 10;
 struct trie {
+    trie() {}
     struct node {
         bool end;
         int ch[26];
@@ -10,10 +10,6 @@ struct trie {
     };
     node a[N];
     int head = 0;
-
-    trie() {
-    }
-
     void insert(const string &s) {
         int cur = 0;
         for (int i = 0; i < (int)s.size(); i++) {

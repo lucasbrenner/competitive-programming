@@ -1,6 +1,6 @@
 #include "../contest/template.cpp"
 
-template<int mod = 1'000'000'007>
+template<int mod = (int)1e9 + 7>
 struct mint {
     int x;
     mint() : x(0) {}
@@ -44,5 +44,5 @@ U& operator >> (U& is, mint<mod>& number) {
     return is;
 }
 
-using Int = mint<1'000'000'007>;
+using Int = mint<(int)1e9 + 7>;
 

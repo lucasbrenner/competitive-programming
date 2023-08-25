@@ -1,36 +1,20 @@
-#include "bits/stdc++.h"
-using namespace std;
+#include "../contest/template.cpp"
 
 struct dsu {
     int n;
     vector<int> p, rnk;
-
-    dsu(int n_) : n(n_) {
-        p.resize(n + 1, 0);
+    dsu(int n) : n(n), p(n + 1), rnk(n + 1) {
         iota(p.begin(), p.end(), 0);
-        rnk.resize(n + 1, 1);
     }
-
-    int find(int x) {
-        if (p[x] == x) return x;
-        return p[x] = find(p[x]);
-    }
-
+    int find(int x) { return p[x] == x ? x : p[x] = find(p[x]); }
     bool join(int a, int b) {
         a = find(a); b = find(b);
         if (a == b) return false;
-        if (rnk[a] > rnk[b]){
-            p[b] = a;
-            rnk[a] += rnk[b];
-        } else{
-            p[a] = b;
-            rnk[b] += rnk[a];
-        }
+        if (rnk[a] < rnk[b]) swap(a, b);
+        p[b] = a;
+        rnk[a] += rnk[b];
         return true;
     }
-
-    bool same(int a, int b) {
-        return find(a) == find(b);
-    }
+    bool same(int a, int b) { return find(a) == find(b); }
 };
  
