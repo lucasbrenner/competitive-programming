@@ -2,7 +2,7 @@
 
 template<class T> struct seg_tree {
     struct node {
-        ll x;
+        T x;
         node() : x(0) {}
         node(T x) : x(x) {}
         node operator + (const node &o) const {

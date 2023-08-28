@@ -1,23 +1,23 @@
 #include "../contest/template.cpp"
 
-int n; // number of nodes
-vector<vector<int>> adj; // adjacency list of graph
+const int N = 3e5 + 10;
+int n, m, tin[N], low[N], vis[N], e[N][2], is_bridge[N];
+vector<int> adj[N];
 
-vector<int> tin, low, visited;
 int timer;
-
 void dfs(int v, int p = -1) {
-    visited[v] = true;
+    vis[v] = true;
     tin[v] = low[v] = timer++;
-    for (int to : adj[v]) {
+    for (int i : adj[v]) {
+        int to = e[i][0] ^ e[i][1] ^ v;
         if (to == p) continue;
-        if (visited[to]) {
+        if (vis[to]) {
             low[v] = min(low[v], tin[to]);
         } else {
             dfs(to, v);
             low[v] = min(low[v], low[to]);
             if (low[to] > tin[v]) {
-                // (v, to) eh uma ponte
+                is_bridge[i] = 1;
             }
         }
     }
@@ -25,9 +25,10 @@ void dfs(int v, int p = -1) {
 
 void find_bridges() {
     timer = 0;
-    visited.assign(n, false);
-    tin.assign(n, -1);
-    low.assign(n, -1);
-    rep(i, 0, n) if (!visited[i]) dfs(i);
+    rep(i, 0, n) {
+        vis[i] = 0;
+        tin[i] = low[i] = -1;
+    }
+    rep(i, 0, n) if (!vis[i]) dfs(i);
 }
 
