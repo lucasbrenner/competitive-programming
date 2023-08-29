@@ -12,11 +12,11 @@ template<class T> struct seg_tree{
 
     int n;
     vector<node> tree;
-    seg_tree(int n_) : n(n_), tree(n * 2) {}
+    seg_tree(int n) : n(n), tree(n * 2) {}
     void update(ll i, T f){
         i += n;
         tree[i].x = f;
-        for(i >>= 1;i >= 1; i >>= 1) tree[i] = tree[i * 2] + tree[i * 2 + 1];
+        for(i >>= 1; i >= 1; i >>= 1) tree[i] = tree[i * 2] + tree[i * 2 + 1];
     }
     T query(ll a, ll b){
         node esq;

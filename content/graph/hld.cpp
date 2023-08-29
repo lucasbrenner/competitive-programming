@@ -4,40 +4,30 @@
 
 template<class T> struct seg_tree {
     struct node {
-        int x;
-        node() : x(0) {}
-        node(ll x) : x(x) {}
-
-        node operator + (const node &o) const {
-            return node(max(x, o.x));
+        T x = 0;
+        const node operator + (const node& o) const {
+            node ans;
+            ans.x = max(o.x, x);
+            return ans;
         }
     };
+
     int n;
     vector<node> tree;
-    seg_tree(int n_) : n(n_), tree(n * 4) {}
-
-    inline int left(int id) { return (id << 1); }
-    inline int right(int id) { return (id << 1) | 1; }
-
-    void update(int id, int l, int r, int pos, T val) {
-        if (l == r) tree[id] = node(val);
-        else {
-            int mid = (l + r) >> 1;
-            if (pos <= mid) update(left(id), l, mid, pos, val);
-            else update(right(id), mid + 1, r, pos, val);
-            tree[id] = tree[left(id)] + tree[right(id)];
+    seg_tree(int n) : n(n), tree(n * 2) {}
+    void update(ll i, T f){
+        i += n;
+        tree[i].x = f;
+        for(i >>= 1; i >= 1; i >>= 1) tree[i] = tree[i * 2] + tree[i * 2 + 1];
+    }
+    T query(ll a, ll b){
+        node esq, dir;
+        for(a += n, b += n; a <= b; a >>= 1, b >>= 1){
+            if(a % 2) esq = esq + tree[a++];
+            if(b % 2 == 0) dir = tree[b--] + dir;
         }
+        return (esq + dir).x;
     }
-
-    node query(int id, int l, int r, int lq, int rq) {
-        if (l > rq || r < lq) return node();
-        if (lq <= l && r <= rq) return tree[id];
-        int mid = (l + r) >> 1;
-        return query(left(id), l, mid, lq, rq) + query(right(id), mid + 1, r, lq, rq);
-    }
-
-    void update(int pos, T val) { update(1, 0, n - 1, pos, val); }
-    node query(int l, int r) { return query(1, 0, n - 1, l, r); }
 };
 
 template<bool EDGES> struct hld {
@@ -45,8 +35,8 @@ template<bool EDGES> struct hld {
     vector<vector<int>> adj;
     vector<int> pr, siz, dep, tp, idx;
     seg_tree<int> tree;
-    hld(vector<vector<int>> adj_)
-        : adj(adj_), n(adj_.size()), pr(n, -1), siz(n, 1), dep(n),
+    hld(vector<vector<int>> adj)
+        : n(sz(adj)), adj(adj), pr(n, -1), siz(n, 1), dep(n),
         tp(n), idx(n), tree(n) {
         dfs_sz(0);
         dfs(0);
@@ -75,20 +65,22 @@ template<bool EDGES> struct hld {
         if (dep[u] > dep[v]) swap(u, v);
         op(idx[u] + EDGES, idx[v]);
     }
-    // requires lazy segment tree
-    void update_path(int u, int v, int val) { 
-        // process(u, v, [&](int l, int r) { tree.update(l, r, val); });
+    /* requires lazy segment tree
+    void update_path(int u, int v, int val) {
+        process(u, v, [&](int l, int r) { tree.update(l, r, val); });
     }
+    */
     void update_vertex(int v, int val) {
         tree.update(idx[v], val);
     }
     int query(int u, int v) {
         int ans = 0;
-        process(u, v, [&](int l, int r) { ans = max(ans, tree.query(l, r).x); });
+        process(u, v, [&](int l, int r) { ans = max(ans, tree.query(l, r)); });
         return ans;
     }
     int query_subtree(int v) {
-        return tree.query(idx[v] + EDGES, idx[v] + siz[v] - 1).x;
+        return tree.query(idx[v] + EDGES, idx[v] + siz[v] - 1);
     }
 };
+
  
