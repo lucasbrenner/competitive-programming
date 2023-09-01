@@ -1,6 +1,7 @@
 #include "./ext_gcd.cpp"
-bool find_any_solution(int a, int b, int c, int &x0, int &y0, int &g) {
-    ll x, y, g = ext_gcd(abs(a), abs(b), x, y);
+
+bool find_any_solution(ll a, ll b, ll c, ll &x0, ll &y0, ll &g) {
+    g = ext_gcd(abs(a), abs(b), x0, y0);
     if (c % g) {
         return false;
     }
