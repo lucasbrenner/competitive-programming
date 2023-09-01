@@ -1,8 +1,9 @@
-const int MAX = 550;
+const int MAX = 550; // O(N^3)
 vector<int> g[MAX]; // 0 indexado
 int match[MAX]; // match[i] = com quem i esta matchzado ou -1
 int n, pai[MAX], base[MAX], vis[MAX];
-queue<int> q;
+queue<int> q; // Se for bipartido, nao precisa da funcao
+			 // 'contract', e roda em O(nm)
 
 void contract(int u, int v, bool first = 1) {
 	static vector<bool> bloss;
