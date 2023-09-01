@@ -3,7 +3,7 @@
 struct dsu {
     int n;
     vector<int> p, rnk;
-    dsu(int n) : n(n), p(n + 1), rnk(n + 1) {
+    dsu(int n) : n(n), p(n + 1), rnk(n + 1, 1) {
         iota(p.begin(), p.end(), 0);
     }
     int find(int x) { return p[x] == x ? x : p[x] = find(p[x]); }

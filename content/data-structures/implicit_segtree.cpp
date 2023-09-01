@@ -13,7 +13,7 @@ struct Vertex {
     int l, r;
     Data info;
     Vertex *lc = nullptr, *rc = nullptr;
-    Vertex(int lb, int rb) : l(lb), r(lb) {
+    Vertex(int lb, int rb) : l(lb), r(rb) {
         info.sum = 0;
     }
     void extend() {
