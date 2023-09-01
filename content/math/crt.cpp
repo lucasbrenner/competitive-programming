@@ -1,6 +1,8 @@
 #include "../contest/template.cpp"
 #include "./ext_gcd.cpp"
 
+//x == a mod m
+//x == b mod n
 ll crt(ll a, ll m, ll b, ll n) {
     if (n > m) swap(a, b), swap(m, n);
     ll x, y, g = ext_gcd(m, n, x, y);
