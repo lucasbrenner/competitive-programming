@@ -4,6 +4,7 @@ struct suffix_array {
     string s;
     int n;
     rmq<int> RMQ;
+    // lcp[i] = lcp(p[i], p[i - 1]);
     vector<int> p, rnk, lcp;
     const int ALP = 256;
 
