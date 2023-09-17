@@ -9,12 +9,13 @@ struct suffix_automaton {
             memset(to, -1, sizeof to);
         }
     };
-    int pt = 1, last = 0;
-    node st[2 * N];
 
+    int pt = 1, last = 0;
     int cnt[2 * N], d[2 * N]; // only necessary to count occurrences
     ll paths[2 * N]; // only necessary for kth
+    node st[2 * N];
 
+    suffix_automaton() {}
     void build(const string &s) {
         for (auto c : s) add(c - first);
         memset(paths, -1, sizeof paths);
@@ -49,27 +50,18 @@ struct suffix_automaton {
         }
         last = cur;
     }
-    int get(const string &s) {
-        int v = 0;
-        for (char c : s) {
-            int x = c - first;
-            if (st[v].to[x] == -1) return -1;
-            v = st[v].to[x];
-        }
-        return v;
-    }
     ll unique_substrs() {
         ll ans = 0;
         rep(i, 1, pt) ans += st[i].len - st[st[i].link].len;
         return ans;
     }
-    ll dfs(int v) {
-        if (paths[v] != -1) return paths[v];
-        paths[v] = 1;
-        rep(i, 0, K) if (st[v].to[i] != -1) {
-            paths[v] += dfs(st[v].to[i]);
-        }
-        return paths[v];
+    bool contains(const string &s) {
+        return get(s) != -1;
+    }
+    // must call pre_cnt()!!
+    int occurrences(const string &s) {
+        int pos = get(s);
+        return pos == -1 ? 0 : cnt[pos];
     }
     string kth(ll k) {
         dfs(0);
@@ -91,7 +83,24 @@ struct suffix_automaton {
         }
         return ans;
     }
-    void precnt() {
+    int get(const string &s) {
+        int v = 0;
+        for (char c : s) {
+            int x = c - first;
+            if (st[v].to[x] == -1) return -1;
+            v = st[v].to[x];
+        }
+        return v;
+    }
+    ll dfs(int v) {
+        if (paths[v] != -1) return paths[v];
+        paths[v] = 1;
+        rep(i, 0, K) if (st[v].to[i] != -1) {
+            paths[v] += dfs(st[v].to[i]);
+        }
+        return paths[v];
+    }
+    void pre_cnt() {
         memset(d, 0, sizeof d);
         rep(i, 1, pt) d[st[i].link]++;
         queue<int> q;
@@ -106,5 +115,4 @@ struct suffix_automaton {
         }
     }
 } sa;
-
 
