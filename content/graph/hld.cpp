@@ -1,5 +1,3 @@
-// tested at https://cses.fi/problemset/task/2134/
-// based on https://github.com/kth-competitive-programming/kactl/blob/main/content/graph/HLD.h
 #include "../contest/template.cpp"
 
 template<class T> struct seg_tree {
@@ -82,5 +80,3 @@ template<bool EDGES> struct hld {
         return tree.query(idx[v] + EDGES, idx[v] + siz[v] - 1);
     }
 };
-
- 

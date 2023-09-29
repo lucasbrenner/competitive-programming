@@ -1,5 +1,5 @@
 #include "../contest/template.cpp"
-#include "./ext_gcd.cpp"
+#include "ext_gcd.cpp"
 
 //x == a mod m
 //x == b mod n
