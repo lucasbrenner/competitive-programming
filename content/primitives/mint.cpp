@@ -19,7 +19,7 @@ struct mint {
         return *this *= u;
     }
     mint& operator ^= (ll e) { 
-        ll b = x; e %= mod, x = 1;
+        ll b = x; x = 1;
         while (e > 0) {
             if (e & 1ll) x = x * b % mod;
             b = b * b % mod, e >>= 1ll;
