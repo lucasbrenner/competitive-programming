@@ -1,5 +1,15 @@
+#include "../contest/template.cpp"
+
+using ld = long double;
+using ll = long long;
+
+const double eps = 1e-7;
+bool eq(ld a, ld b = 0) {
+    return abs(a - b) <= eps;
+}
+
 struct pt {
-    using T = double;
+    using T = ld;
 
     T x, y;
     explicit pt(T x=0, T y=0) : x(x), y(y) {}
@@ -18,8 +28,8 @@ struct pt {
     pt unit() const { return *this/dist(); } // makes dist()=1
     pt perp() const { return pt(-y, x); } // rotates +90 degrees
     pt normal() const { return perp().unit(); } 
-    friend ostream& operator << (ostream &os, pt p) {
-        return os << "(" << p.x << ", " << p.y << ")";}
+    // friend ostream& operator << (ostream &os, pt p) {
+    //     return os << "(" << p.x << ", " << p.y << ")";}
     T ori(pt a, pt b) const { T f = cross(a, b); return (f < 0 ? -1 : (f > 0 ? 1 : 0)); }    
     pt r90cw(){ return pt(y, -x);} // rotate 90 degrees clock wise
     pt r90ccw(){ return pt(-y, x);} // rotate 90 degrees counter clock wise 
@@ -37,21 +47,12 @@ double areaPoly(vector<pt> &poly) {
     return abs(area)/2.0;
 }
 
-using line=array<double,3>;
-line bisector(pt o, pt a, pt b) { //bissetriz de AOB, p
-    a = a - o, b = b - o;                 // (a*b)  k  (b*a)
-    pt k = a * b.dist() + b * a.dist() + o; //   \    o   /   k/=k.dist()
-    //reta Ax+By+C=0
-    double A=k.y-o.y, B = o.x-k.x, C = -A*o.x - B*o.y;
-    return {A,B,C};
-}
-
 //dist P to line(b,c), A=c.y-b.y, B=b.x - c.x, C = -A*b.x - B*b.y
 //dist P to line(Ax+By+C=0) =|A.x + B.y + C| / (sqrt(A^2+B^2))
 //dist p to segment(s,e)
 double segDist(pt& s, pt& e, pt& p) {
-    if (s==e) return (p-s).dist();
-    auto d = (e-s).dist2(), t = min(d,max(.0,(p-s).dot(e-s)));
+    if (s==e) return (p-s).dist(); // castar o 0, pro msm time que dot
+    auto d = (e-s).dist2(), t = min(d,max((ld).0,(p-s).dot(e-s)));
     return ((p-s)*d-(e-s)*t).dist()/d;
 }
 
@@ -67,9 +68,46 @@ template<class T> vector<T> seg_int(T a, T b, T c, T d) {
     if (sgn(oa) * sgn(ob) < 0 && sgn(oc) * sgn(od) < 0)
         return {(a * ob - b * oa) / (ob - oa)};
     set<T> s;
-    if (on_segment(c, d, a)) s.insert(a);
-    if (on_segment(c, d, b)) s.insert(b);
-    if (on_segment(a, b, c)) s.insert(c);
-    if (on_segment(a, b, d)) s.insert(d);
+    if (onSegment(c, d, a)) s.insert(a);
+    if (onSegment(c, d, b)) s.insert(b);
+    if (onSegment(a, b, c)) s.insert(c);
+    if (onSegment(a, b, d)) s.insert(d);
     return {s.begin(), s.end()};
+}
+
+struct line { // reta
+    pt p, q;
+    double a,b,c;
+    line() {}
+    line(pt p_, pt q_) : p(p_), q(q_) {}
+    line(double a=0,double b=0, double c=0): a(a),b(b),c(c){}
+};
+
+line bisector(pt o, pt a, pt b) { //bissetriz de AOB, p
+    a = a - o, b = b - o;                 // (a*b)  k  (b*a)
+    pt k = a * b.dist() + b * a.dist() + o; //   \    o   /   k/=k.dist()
+    //reta Ax+By+C=0
+    double A=k.y-o.y, B = o.x-k.x, C = -A*o.x - B*o.y;
+    return line(A,B,C);
+}
+
+ld sarea(pt p, pt q, pt r) { // area com sinal
+    return ((q-p).cross(r-q))/2;
+}
+
+bool ccw(pt p, pt q, pt r) { // se p, q, r sao ccw
+    return sarea(p, q, r) > eps;
+}
+
+bool isinseg(pt p, line r) { // se p pertence ao seg de r
+    pt a = r.p - p, b = r.q - p;
+    return eq(a.cross(b), 0) and a.dot(b) < eps;
+}
+
+bool interseg(line r, line s) { // se o seg de r intersecta o seg de s
+    if (isinseg(r.p, s) or isinseg(r.q, s)
+        or isinseg(s.p, r) or isinseg(s.q, r)) return 1;
+
+    return ccw(r.p, r.q, s.p) != ccw(r.p, r.q, s.q) and
+            ccw(s.p, s.q, r.p) != ccw(s.p, s.q, r.q);
 }

@@ -1,7 +1,9 @@
+#include "./point.cpp"
+
 struct polygon {
     int n;
     vector<pt> pol;
-    ptolygon(vector<pt> poly = {}) : pol(poly) {
+    polygon(vector<pt> poly) : pol(poly) {
         n = sz(pol);
     }
 
@@ -36,6 +38,7 @@ pair<int, pt> lineInter(pt s1, pt e1, pt s2, pt e2) {
 	auto p = s2.cross(e1, e2), q = s2.cross(e2, s1);
 	return {1, (s1 * p + e1 * q) / d};
 }
+
 vector<pt> polygonCut(const vector<pt>& poly, pt s, pt e) {
 	vector<pt> res;
 	rep(i,0,sz(poly)) {
