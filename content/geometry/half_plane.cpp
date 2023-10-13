@@ -1,7 +1,8 @@
 #include "./point.cpp"
-const double EPS = 1e-6;
+
+#define pb push_back
+const double EPS = 1e-6, INF = 1e9;
 const double PI = acos(-1);
-const double INF = 1e9;
 
 pt lineIntersectSeg(pt p, pt q, pt A, pt B) {
     double c = (A-B).cross(p-q);
@@ -15,14 +16,6 @@ bool parallel(pt a, pt b) {
 }
 
 typedef vector<pt> polygon;
-double signedArea(polygon &P) {
-    double result = 0.0;
-    int n = sz(P);
-    for(int i=0;i<n;++i)
-        result += P[i].cross(P[(i+1)%n]);    
-    return result / 2.0;
-}
-
 typedef pair<pt, pt> halfplane;
 pt dir(halfplane h) {
     return h.second - h.first;
@@ -41,7 +34,8 @@ bool hpcomp(halfplane ha, halfplane hb) {
     else return b.y < a.y;
 }
 
-polygon intersect(vector<halfplane> H, double W = INF) {
+//clockwise {(i+1),(i)}
+polygon intersect(vector<halfplane> H, double W = INF) { //
     H.pb(halfplane(pt(-W,-W), pt(W,-W)));//-1,-1 | 1,-1
     H.pb(halfplane(pt(W,-W), pt(W,W)));  // 1,-1 | 1, 1
     H.pb(halfplane(pt(W,W), pt(-W,W))); //  1, 1 |-1, 1
@@ -62,6 +56,8 @@ polygon intersect(vector<halfplane> H, double W = INF) {
             S.back().first, S.back().second));
         S.pb(H[i]);
     }
+    
+    // se n for convexo, checar se sz(S) e sz(P) > 0
     while(!belongs(S.back(), P.front()) ||
         !belongs(S.front(), P.back())) {
         while(!belongs(S.back(), P.front()))
@@ -69,25 +65,8 @@ polygon intersect(vector<halfplane> H, double W = INF) {
         while(!belongs(S.front(), P.back()))
             P.pop_back(), S.pop_back();
     }
+
     P.pb(lineIntersectSeg(S.front().first,
         S.front().second, S.back().first, S.back().second));
     return polygon(all(P));
-}
-
-int main() {
-    int n; cin>>n;
-    vector<pt> polygon(n);
-    for(auto &p : polygon)
-        cin>>p.x>>p.y;    
-
-    vector<halfplane> halfplanes;
-    for(int i=0;i<n;++i) {
-        halfplane currLine = {polygon[(i+1)%n], polygon[i]};
-        halfplanes.pb(currLine);
-    }
-
-    auto poly = intersect(halfplanes);
-    double ans = fabs(signedArea(poly));
-    cout<<fixed<<setprecision(12);
-    cout<<ans<<endl;
 }

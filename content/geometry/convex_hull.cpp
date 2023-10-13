@@ -1,6 +1,3 @@
-#include "bits/stdc++.h"
-using namespace std;
-
 #include "./point.cpp"
 
 template<class T> vector<T> convex_hull(vector<T> a, bool ic) {
@@ -23,7 +20,7 @@ template<class T> vector<T> convex_hull(vector<T> a, bool ic) {
 (ccw,no duplicate/collinear points) O(N)*/
 array<pt, 2> hullDiameter(vector<pt> S) {
     int n = sz(S), j = n < 2 ? 0 : 1;
-    pair<ll, array<pt, 2>> res({0, {S[0], S[0]}});
+    pair<ld, array<pt, 2>> res({0, {S[0], S[0]}});
     rep(i,0,j)
         for (;; j = (j + 1) % n) {
             res = max(res, {(S[i] - S[j]).dist2(), {S[i], S[j]}});
