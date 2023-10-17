@@ -111,3 +111,27 @@ bool interseg(line r, line s) { // se o seg de r intersecta o seg de s
     return ccw(r.p, r.q, s.p) != ccw(r.p, r.q, s.q) and
             ccw(s.p, s.q, r.p) != ccw(s.p, s.q, r.q);
 }
+
+pair<ld,pt> segProj(pt l, pt r, pt p) {
+	if((l-r).dot(p-r) < 0) return {(p-r).dist(), r};
+	if((r-l).dot(p-l) < 0) return {(p-l).dist(), l};
+	ld dis = (r-l).cross(p-l)/(l-r).dist();
+ 
+	pt v = (r-l) / (r-l).dist();
+	pt best = l + v * (r-l).dot(p-l) / (l-r).dist();
+ 
+	pair<ld,pt> ans = {dis, best};
+	return ans;
+}
+//ponto no poligno v, mais proximo de p
+pt closest(vector<pt> &v, pt p) {
+	int n=sz(v);
+    ld inf = 1e18;
+	pair<ld, pt> best={inf, p};
+	rep(i,0,n) {
+		pair<ld,pt> cur = segProj(v[i],v[(i+1)%n], p);
+		if(cur.first < best.first)
+			best = cur;
+	}
+	return best.second;
+}
