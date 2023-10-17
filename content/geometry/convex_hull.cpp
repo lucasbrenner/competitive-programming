@@ -1,19 +1,16 @@
 #include "./point.cpp"
-
-template<class T> vector<T> convex_hull(vector<T> a, bool ic) {
-    if (a.size() <= 1) return a;
-    sort(a.begin(), a.end());
-    vector<T> ans((int)a.size() + 1);
-    int s = 0, t = 0, it = 2;
-    for (; it--; s = --t, reverse(a.begin(), a.end())) {
-        for (T p : a) {
-            while (t - 2 >= s && ans[t - 2].ori(ans[t - 1], p) + ic <= 0) t--;
-            ans[t++] = p;
+//convexhull sem coolinear
+vector<pt> convexHull(vector<pt> pts) {
+    if (sz(pts) <= 1) return pts;
+    sort(all(pts));
+    vector<pt> h(sz(pts)+1); //h(2*sz(pts)+2) pra ter colinear
+    int s = 0, t = 0;       
+    for (int it = 2; it--; s = --t, reverse(all(pts)))
+        for (pt p : pts) {               // troca por > 0,coolinear
+            while (t >= s + 2 && h[t-2].cross(h[t-1], p) <= 0) t--; 
+            h[t++] = p;
         }
-        if (ic && t == (int)a.size()) return a;
-    }
-    ans.resize(t - (t == 2 && ans[0] == ans[1]));
-    return ans;
+    return {h.begin(), h.begin() + t - (t == 2 && h[0] == h[1])};
 }
 
 /*Returns the two points with max distance on a convex hull 
