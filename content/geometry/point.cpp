@@ -41,10 +41,10 @@ int sgn(ll x) { return (x > 0) - (x < 0); }
 
 double areaPoly(vector<pt> &poly) {
     assert(3<=sz(poly));
-    ll area=poly.back().cross(poly[0]);
+    ld area=poly.back().cross(poly[0]);
     for(int i=0;i<sz(poly)-1;++i)
         area += poly[i].cross(poly[i+1]);
-    return abs(area)/2.0;
+    return fabs(area)/ (ld) 2;
 }
 
 //dist P to line(b,c), A=c.y-b.y, B=b.x - c.x, C = -A*b.x - B*b.y
