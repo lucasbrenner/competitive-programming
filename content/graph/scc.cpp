@@ -16,6 +16,8 @@ void dfs2(int v) {
 }
 
 void solve(int n, int m) {
+    adj.resize(n);
+    adj_rev.resize(n);
     while (m--) {
         int a, b; cin >> a >> b;
         adj[a].push_back(b);
@@ -29,6 +31,7 @@ void solve(int n, int m) {
         dfs2(v);
         component.clear();
     }
+    used.assign(n, false);
 
     vector<int> roots(n, 0), root_nodes;
     vector<vector<int>> adj_scc(n);
