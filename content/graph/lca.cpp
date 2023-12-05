@@ -23,7 +23,7 @@ struct lca {
     int get_lca(int a, int b) {
         if (dep[a] < dep[b]) swap(a, b);
         for (int i = lg - 1; i >= 0; i--) {
-            if (dep[a] - dep[b] >= (1 << i)) a = anc[a][i];
+            if (dep[anc[a][i]] >= dep[b]) a = anc[a][i];
         }
         if (a == b) return a;
         for (int i = lg - 1; i >= 0; i--) {
