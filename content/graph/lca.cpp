@@ -29,7 +29,7 @@ struct lca {
         if(is_anc(a, b)) return a;
         if(is_anc(b, a)) return b;
         for (int i = lg - 1; i >= 0; i--) {
-            if (!is_anc(anc[a][i], b) /*&& *anc[a][i]*/){ //descomentar se for 1 indexado
+            if (!is_anc(anc[a][i], b) && in[anc[a][i]] != out[anc[a][i]]){
                 a = anc[a][i];
             }
         }
