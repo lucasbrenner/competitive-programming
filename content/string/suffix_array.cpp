@@ -1,62 +1,33 @@
 #include "../data-structures/rmq.cpp"
 
-struct suffix_array {
-    string s;
-    int n;
+struct SuffixArray {
+	vector<int> sa, lcp, rnk;
     rmq<int> RMQ;
-    // lcp[i] = lcp(p[i], p[i - 1]);
-    vector<int> p, rnk, lcp;
-    const int ALP = 256;
-
-    suffix_array(const string &s_) : s(s_) {
-        s += (char)0;
-        n = s.length();
-        p.resize(n), rnk.resize(n), lcp.resize(n);
-        int cl = 1;
-        vector<int> cn(n), pn(n), cnt(max(n, ALP), 0);
-        for (int i = 0; i < n; i++) cnt[s[i]]++;
-        for (int i = 1; i < ALP; i++) cnt[i] += cnt[i - 1];
-        for (int i = 0; i < n; i++) p[--cnt[s[i]]] = i;
-        rnk[p[0]] = 0;
-        for (int i = 1; i < n; i++) {
-            if(s[p[i]] != s[p[i - 1]]) cl++;
-            rnk[p[i]] = cl - 1;
-        }
-        for (int h = 0; (1 << h) < n; h++) {
-            for (int i = 0; i < n; i++) {
-                pn[i] = p[i] - (1 << h);
-                if (pn[i] < 0) pn[i] += n;
-            }
-            fill(cnt.begin(), cnt.end(), 0);
-            for (int i = 0; i < n; i++) cnt[rnk[pn[i]]]++;
-            for (int i = 1; i < cl; i++) cnt[i] += cnt[i - 1];
-            for (int i = n - 1; i >= 0; i--) {
-                p[--cnt[rnk[pn[i]]]] = pn[i];
-            }
-            cl = 1;
-            cn[p[0]] = 0;
-            for (int i = 1; i < n; i++) {
-                pair<int, int> cur = {rnk[p[i]], rnk[(p[i] + (1 << h)) % n]};
-                pair<int, int> prv = {rnk[p[i - 1]], rnk[(p[i - 1] + (1 << h)) % n]};
-                if(cur != prv) cl++;
-                cn[p[i]] = cl - 1;
-            }
-            cn.swap(rnk);
-        }
-
-        for (int i = 0, k = 0; i < n - 1; i++) {
-            int prv = p[rnk[i] - 1];
-            while (s[i + k] == s[prv + k]) k++;
-            lcp[rnk[i]] = k;
-            k = max(0, k - 1);
-        }
-        
-        RMQ = rmq(lcp);
-    }
+	SuffixArray(string& s, int lim=256) { // or basic_string<int>
+		int n = sz(s) + 1, k = 0, a, b;
+		vector<int> x(all(s)+1), y(n), ws(max(n, lim));
+        rnk.resize(n);
+		sa = lcp = y, iota(all(sa), 0);
+		for (int j = 0, p = 0; p < n; j = max(1, j * 2), lim = p) {
+			p = j, iota(all(y), n - j);
+			rep(i,0,n) if (sa[i] >= j) y[p++] = sa[i] - j;
+			fill(all(ws), 0);
+			rep(i,0,n) ws[x[i]]++;
+			rep(i,1,lim) ws[i] += ws[i - 1];
+			for (int i = n; i--;) sa[--ws[x[y[i]]]] = y[i];
+			swap(x, y), p = 1, x[sa[0]] = 0;
+			rep(i,1,n) a = sa[i - 1], b = sa[i], x[b] =
+				(y[a] == y[b] && y[a + j] == y[b + j]) ? p - 1 : p++;
+		}
+		rep(i,1,n) rnk[sa[i]] = i;
+		for (int i = 0, j; i < n - 1; lcp[rnk[i++]] = k)
+			for (k && k--, j = sa[rnk[i] - 1];
+					s[i + k] == s[j + k]; k++);
+        RMQ = rmq<int>(lcp);
+	}
 
     int query(int l, int r) {
-        if (l == r) return n - l;
+        if (l == r) return sz(sa) - l;
         return RMQ.query(min(l, r) + 1, max(l, r));
     }
 };
-
