@@ -6,6 +6,7 @@ struct Line {
     bool operator<(ll x) const { return p < x; }
 };
 
+// max queries
 struct LineContainer : multiset<Line, less<>> {
     // (for doubles, use inf = 1/.0, div(a,b) = a/b)
     static const ll inf = LLONG_MAX;
@@ -29,4 +30,6 @@ struct LineContainer : multiset<Line, less<>> {
         auto l = *lower_bound(x);
         return l.k * x + l.m;
     }
+    // to make min queries, k = -k, m = -m, return -query(x)
 };
+
