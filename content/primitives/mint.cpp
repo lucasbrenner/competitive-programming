@@ -45,4 +45,3 @@ U& operator >> (U& is, mint<mod>& number) {
 }
 
 using Int = mint<(int)1e9 + 7>;
-
