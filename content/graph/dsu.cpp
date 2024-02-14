@@ -17,4 +17,3 @@ struct dsu {
     }
     bool same(int a, int b) { return find(a) == find(b); }
 };
- 

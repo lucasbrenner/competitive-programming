@@ -18,4 +18,3 @@ vector<int> z_function(string s) {
     }
     return z;
 }
-

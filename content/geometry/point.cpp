@@ -34,6 +34,7 @@ struct pt {
     pt r90cw(){ return pt(y, -x);} // rotate 90 degrees clock wise
     pt r90ccw(){ return pt(-y, x);} // rotate 90 degrees counter clock wise 
 };
+
 bool onSegment(pt &s, pt &e, pt &p) {
     return p.cross(s, e) == 0 && (s - p).dot(e - p) <= 0;
 }
