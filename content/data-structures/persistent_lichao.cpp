@@ -15,6 +15,13 @@ struct PersistentLiChaoTree {
         ll f(ll x) {
             return a * x + b;
         }
+
+        bool best(Line ot, ll x) {
+            return f(x) > ot.f(x);
+        }
+    };
+    Line best(Line a, Line b, ll x) {
+        return (a.best(b, x) ? a : b);
     };
 
     struct Node {
@@ -40,24 +47,19 @@ struct PersistentLiChaoTree {
         change.back().push_back({i, {tree[i].l, tree[i].r, tree[i].line.a, tree[i].line.b}});
 
         Line low = tree[i].line, high = new_line;
-        if (low.f(xl) >= high.f(xl)) swap(low, high);
+        if (low.best(high, xl)) swap(low, high);
 
-        if (low.f(xr) <= high.f(xr)) {
+        if (high.best(low, xr)) {
             tree[i].line = high;
             return;
-        }
-
-        else if (low.f(xm) <= high.f(xm)) {
+        }else if (high.best(low, xm)) {
             tree[i].line = high;
-            if (tree[i].r == -1)
-            {
+            if (tree[i].r == -1) {
                 tree[i].r = tree.size();
                 tree.push_back({-1, -1, xm + 1, xr, Line(0, -INF)});
             }
             add_line(low, tree[i].r);
-        }
-
-        else {
+        }else {
             tree[i].line = low;
             if (tree[i].l == -1) {
                 tree[i].l = tree.size();
@@ -67,13 +69,14 @@ struct PersistentLiChaoTree {
         }
     }
 
-    ll query(ll x, int i = 0) {
-        if (i == -1) return -INF;
+    Line query2(ll x, int i = 0) {
+        if (i == -1) return Line(0,-INF);
         ll xl = tree[i].xl, xr = tree[i].xr;
         ll xm = (xl + xr) >> 1;
-        if (x <= xm) return max(tree[i].line.f(x), query(x, tree[i].l));
-        else return max(tree[i].line.f(x), query(x, tree[i].r));
+        if (x <= xm) return best(tree[i].line, query2(x, tree[i].l), x);
+        else return best(tree[i].line, query2(x, tree[i].r), x);
     }
+    ll query(ll x, int i = 0) { return query2(x, i).f(x); }
 
     void add_line(ll a, ll b) {
         change.push_back({});
