@@ -2,7 +2,7 @@
 
 vector<int> manacher(const string &s) {
     string t = "$#";
-    for (int i = 0; i < s.size(); i++){
+    rep(i, 0, sz(s)) {
         t += s[i];
         t += '#';
     }

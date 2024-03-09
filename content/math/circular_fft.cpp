@@ -6,7 +6,7 @@ void circularConv(vector<double> &a, vector<double> &b, vector<double> &res) {
     assert(sz(a) == sz(b));
     int n = a.size();
     res = conv(a, b);
-    for(int i = n; i < (int)res.size(); i++) res[i%n] = (res[i%n]+res[i]);
+    rep(i, n, sz(res)) res[i%n] = (res[i%n]+res[i]);
     res.resize(n);
 }
 

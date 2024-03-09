@@ -40,7 +40,7 @@ template<bool EDGES> struct hld {
         dfs(0);
     }
     void dfs_sz(int v) {
-        if (pr[v] != -1) adj[v].erase(find(adj[v].begin(), adj[v].end(), pr[v]));
+        if (pr[v] != -1) adj[v].erase(find(all(adj[v]), pr[v]));
         for (int &ch : adj[v]) {
             pr[ch] = v, dep[ch] = dep[v] + 1;
             dfs_sz(ch);

@@ -1,5 +1,4 @@
 // https://codeforces.com/contest/1083/problem/E
-// non-increasing slope, non-decreasing queries, max queries
 #include "../contest/template.cpp"
 
 struct line {
@@ -12,6 +11,7 @@ struct line {
     }
 };
 
+// non-increasing slope, non-decreasing queries, max queries
 struct cht {
     deque<line> q;
     void add(ll a, ll b) {

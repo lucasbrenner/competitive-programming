@@ -63,15 +63,15 @@ struct seg_tree {
 
     inline void push(int id, int l, int r) {
         if (lazy[id] == array<ll, K>{}) return;
-        for (int i = 0; i < K; i++) norm(tree[id].sum += f[i](r - l) * lazy[id][i]);
+        rep(i, 0, K) norm(tree[id].sum += f[i](r - l) * lazy[id][i]);
 
         if (l != r) {
             int mid = (l + r) / 2;
-            for (int i = 0; i < K; i++) norm(lazy[left(id)][i] += lazy[id][i]);
+            rep(i, 0, K) norm(lazy[left(id)][i] += lazy[id][i]);
             auto nxt = shift_idx(lazy[id], mid - l + 1);
-            for (int i = 0; i < K; i++) norm(lazy[right(id)][i] += nxt[i]);
+            rep(i, 0, K) norm(lazy[right(id)][i] += nxt[i]);
         }
-        for (int i = 0; i < K; i++) lazy[id][i] = 0;
+        rep(i, 0, K) lazy[id][i] = 0;
     }
 
     // add f(i - l) to each i in [l, r]
@@ -79,7 +79,7 @@ struct seg_tree {
         push(id, l, r);
         if (l > rq || r < lq) return;
         if (lq <= l && r <= rq) {
-            for (int i = 0; i < K; i++) norm(lazy[id][i] += val[i]);
+            rep(i, 0, K) norm(lazy[id][i] += val[i]);
             push(id, l, r);
         } else {
             int mid = (l + r) >> 1;

@@ -5,7 +5,7 @@ int lp[MAX + 1];
 vector<int> pr;
 
 void linear_sieve() {
-    for (int i = 2; i <= MAX; i++) {
+    rep(i, 2, MAX + 1) {
         if (lp[i] == 0) {
             lp[i] = i;
             pr.push_back(i);

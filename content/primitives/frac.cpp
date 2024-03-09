@@ -30,6 +30,7 @@ struct frac {
         norm();
         return *this;
     }
+    bool operator < (frac o) const { return num * o.den < den * o.num; }
     frac operator + (frac o) const { return frac(*this) += o; }
     frac operator - (frac o) const { return frac(*this) -= o; }
     frac operator * (frac o) const { return frac(*this) *= o; }

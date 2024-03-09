@@ -48,3 +48,4 @@ void solve(int n, int m) {
             adj_scc[root_v].push_back(root_u);
     }
 }
+

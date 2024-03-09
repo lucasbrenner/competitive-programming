@@ -5,7 +5,7 @@ Int fn[N], fd[N], iv[N];
 
 void initnck() {
     iv[1] = fn[1] = fd[1] = fn[0] = fd[0] = 1;
-    for (ll i = 2; i < N; i++){
+    rep(i, 2, N) {
         iv[i] = Int() - iv[mod % i] * (mod / i);
         fn[i] = fn[i - 1] * i;
         fd[i] = fd[i - 1] * iv[i];

@@ -12,7 +12,7 @@ struct trie {
     int head = 0;
     void insert(const string &s) {
         int cur = 0;
-        for (int i = 0; i < (int)s.size(); i++) {
+        rep(i, 0, sz(s)) {
             if (a[cur].ch[s[i] - 'a'] == -1) a[cur].ch[s[i] - 'a'] = ++head;
             cur = a[cur].ch[s[i] - 'a'];
         }

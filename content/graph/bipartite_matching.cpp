@@ -14,7 +14,7 @@ struct bip_match {
     void add(int a, int b) { g[a].push_back(b); }
 
     bool dfs(int i) {
-        for (int &id = nxt[i]; id < g[i].size(); id++) {
+        for (int &id = nxt[i]; id < sz(g[i]); id++) {
             int j = g[i][id];
             if (mb[j] == -1 or (dist[mb[j]] == dist[i] + 1 and dfs(mb[j]))) {
                 ma[i] = j, mb[j] = i;
@@ -24,9 +24,9 @@ struct bip_match {
         return false;
     }
     bool bfs() {
-        for (int i = 0; i < n; i++) dist[i] = n;
+        rep(i, 0, n) dist[i] = n;
         queue<int> q;
-        for (int i = 0; i < n; i++) if (ma[i] == -1) {
+        rep(i, 0, n) if (ma[i] == -1) {
             dist[i] = 0;
             q.push(i);
         }
@@ -47,9 +47,8 @@ struct bip_match {
         int ret = 0;
         for (auto& i : g) shuffle(i.begin(), i.end(), rng);
         while (bfs()) {
-            for (int i = 0; i < n; i++) nxt[i] = 0;
-            for (int i = 0; i < n; i++)
-                if (ma[i] == -1 and dfs(i)) ret++;
+            rep(i, 0, n) nxt[i] = 0;
+            rep(i, 0, n) if (ma[i] == -1 and dfs(i)) ret++;
         }
         return ret;
     }

@@ -42,7 +42,7 @@ struct aho_corasick {
             }
             if (v) adj[a[v].link].push_back(v);
 
-            for (int i = 0; i < K; i++) if (a[v].ch[i] != -1) {
+            rep(i, 0, K) if (a[v].ch[i] != -1) {
                 q.push({a[v].ch[i], i});
             }
         }

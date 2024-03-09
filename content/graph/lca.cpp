@@ -15,7 +15,7 @@ struct lca {
     void dfs(int v, int p = -1, int d = 1) {
         dep[v] = d;
         in[v] = t++;
-        for (int i = 1; i < lg; i++) anc[v][i] = anc[anc[v][i - 1]][i - 1];
+        rep(i, 1, lg) anc[v][i] = anc[anc[v][i - 1]][i - 1];
         for (int ch : adj[v]) if (ch != p) {
             anc[ch][0] = v;
             dfs(ch, v, d + 1);
