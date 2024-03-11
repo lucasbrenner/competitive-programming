@@ -4,9 +4,10 @@ template<typename T> struct min_queue {
     int added = 0, removed = 0;
     deque<pair<T, int>> q;
 
-    T max() { return q.front().first; }
+    T min() { return q.front().first; }
 
     void add(T val) {
+        // for maximum, switch to <
         while (!q.empty() && q.back().first > val) q.pop_back();
         q.push_back({val, added});
         added++;
