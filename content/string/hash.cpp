@@ -2,7 +2,7 @@
 
 mt19937 rng((int) chrono::steady_clock::now().time_since_epoch().count());
 const int NN = 2e5 + 1, K = 2, P = uniform_int_distribution<int>(256, 1e9)(rng); // l > |sigma|, r < min(mod)
-const ll MOD[] = { (int)1e9 + 7, (int)1e9 + 9 };
+const ll MOD[] = {1000893493, 1013782387};
 ll ph[NN][K], hh[NN][K], IT; // LEMBRAR DE CHAMAR pre()!!!!!!!!!!
 void pre() { rep(i, 0, NN) rep(j, 0, K) ph[i][j] = i ? ph[i - 1][j] * P % MOD[j] : 1; }
 
