@@ -1,17 +1,16 @@
 #include "../contest/template.cpp"
 
 const int N = 3e5 + 10;
-int n, m, tin[N], low[N], vis[N], e[N][2], is_bridge[N];
+int n, m, tin[N], low[N], e[N][2], is_bridge[N];
 vector<int> adj[N];
 
 int timer;
 void dfs(int v, int p = -1) {
-    vis[v] = true;
     tin[v] = low[v] = timer++;
     for (int i : adj[v]) {
         int to = e[i][0] ^ e[i][1] ^ v;
         if (to == p) continue;
-        if (vis[to]) {
+        if (tin[to]) {
             low[v] = min(low[v], tin[to]);
         } else {
             dfs(to, v);
@@ -24,11 +23,10 @@ void dfs(int v, int p = -1) {
 }
 
 void find_bridges() {
-    timer = 0;
+    timer = 1;
     rep(i, 0, n) {
-        vis[i] = 0;
-        tin[i] = low[i] = -1;
+        tin[i] = low[i] = 0;
     }
-    rep(i, 0, n) if (!vis[i]) dfs(i);
+    rep(i, 0, n) if (!tin[i]) dfs(i);
 }
 
