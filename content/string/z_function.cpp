@@ -1,19 +1,13 @@
 #include "../contest/template.cpp"
 
 vector<int> z_function(string s) {
-    int n = s.size();
+    int n = sz(s);
     vector<int> z(n);
-    int l = 0, r = 0;
+    int x = 0, y = 0;
     rep(i, 1, n) {
-        if (i < r) {
-            z[i] = min(r - i, z[i - l]);
-        }
-        while (i + z[i] < n && s[z[i]] == s[i + z[i]]) {
-            z[i]++;
-        }
-        if (i + z[i] > r) {
-            l = i;
-            r = i + z[i];
+        z[i] = max(0,min(z[i-x],y-i+1));
+        while (i+z[i] < n && s[z[i]] == s[i+z[i]]) {
+            x = i; y = i+z[i]; z[i]++;
         }
     }
     return z;
