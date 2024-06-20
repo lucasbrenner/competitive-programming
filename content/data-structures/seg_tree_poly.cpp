@@ -1,45 +1,33 @@
-#include "../contest/template.cpp"
-
-const ll mod = 1e9 + 7;
+#include "../primitives/mint.cpp"
 
 // polynomial's degree + 1
-const int K = 3;
+const int K = 4;
+Int d2 = Int(1) / 2, d4 = Int(1) / 4, d6 = Int(1) / 6;
 
 // f[i](x) = 0^i + 1^i + ... + x^i
-function<ll(ll)> f[] = {
-    [](ll x){ return x + 1; },
-    [](ll x){ return (x * (x + 1) / 2) % mod; },
-    [](ll x){ return (x * (x + 1) * (2 * x + 1) / 6) % mod; }
+function<Int(ll)> f[] = {
+    [](ll x){ return Int(x) + 1; },
+    [](ll x){ return Int(x) * (x + 1) * d2; },
+    [](ll x){ return Int(x) * (x + 1) * (2 * x + 1) * d6; },
+    [](ll x){ return Int(x) * x * (x + 1) * (x + 1) * d4; }
 };
 
+using T = array<Int, K>;
 // updates polynomial's coefficients from f(x) to f(x + h)
-array<ll, K> shift_idx(array<ll, K> a, ll h) {
-    array<ll, K> ans = {
-        (((a[2] * h % mod) * h % mod + a[1] * h + a[0]) % mod + mod) % mod,
-        ((a[2] * 2 * h + a[1]) % mod + mod) % mod,
-        a[2]
+T shift_idx(T a, ll h) {
+    Int h2 = Int(h)*h, h3 = h2*h;
+    return {
+        a[0] + a[1]*h + a[2]*h2 + a[3] * h3,
+        a[1] + a[2]*2*h + a[3]*3*h2,
+        a[2] + a[3]*3*h,
+        a[3]
     };
-    return ans;
-}
-
-void norm(ll &x) {
-    x %= mod;
-    if (x < 0) x += mod;
 }
 
 struct seg_tree {
-    struct node {
-        ll sum;
-        node() : sum(0) {}
-        node(ll x) : sum(x) {}
-        node operator + (const node &o) const {
-            return node((sum + o.sum) % mod);
-        }
-    };
-
     int n;
-    vector<node> tree;
-    vector<array<ll, K>> lazy;
+    vector<Int> tree;
+    vector<T> lazy;
 
     seg_tree(vector<ll> a) {
         n = a.size();
@@ -52,7 +40,7 @@ struct seg_tree {
     inline int right(int id) { return (id << 1) | 1; }
 
     void build(int id, int l, int r, const vector<ll> &a) {
-        if (l == r) tree[id] = node(a[l]);
+        if (l == r) tree[id] = a[l];
         else {
             int m = (l + r) >> 1;
             build(left(id), l, m, a);
@@ -62,24 +50,24 @@ struct seg_tree {
     }
 
     inline void push(int id, int l, int r) {
-        if (lazy[id] == array<ll, K>{}) return;
-        rep(i, 0, K) norm(tree[id].sum += f[i](r - l) * lazy[id][i]);
+        if (lazy[id] == T{}) return;
+        rep(i, 0, K) tree[id] += f[i](r - l) * lazy[id][i];
 
         if (l != r) {
             int mid = (l + r) / 2;
-            rep(i, 0, K) norm(lazy[left(id)][i] += lazy[id][i]);
+            rep(i, 0, K) lazy[left(id)][i] += lazy[id][i];
             auto nxt = shift_idx(lazy[id], mid - l + 1);
-            rep(i, 0, K) norm(lazy[right(id)][i] += nxt[i]);
+            rep(i, 0, K) lazy[right(id)][i] += nxt[i];
         }
         rep(i, 0, K) lazy[id][i] = 0;
     }
 
     // add f(i - l) to each i in [l, r]
-    void update(int id, int l, int r, int lq, int rq, array<ll, K> val) {
+    void update(int id, int l, int r, int lq, int rq, T val) {
         push(id, l, r);
         if (l > rq || r < lq) return;
         if (lq <= l && r <= rq) {
-            rep(i, 0, K) norm(lazy[id][i] += val[i]);
+            rep(i, 0, K) lazy[id][i] += val[i];
             push(id, l, r);
         } else {
             int mid = (l + r) >> 1;
@@ -90,15 +78,15 @@ struct seg_tree {
         }
     }
 
-    node query(int id, int l, int r, int lq, int rq) {
+    Int query(int id, int l, int r, int lq, int rq) {
         push(id, l, r);
-        if (l > rq || r < lq) return node();
+        if (l > rq || r < lq) return 0;
         if (lq <= l && r <= rq) return tree[id];
         int mid = (l + r) >> 1;
         return query(left(id), l, mid, lq, rq) + query(right(id), mid + 1, r, lq, rq);
     }
 
-    void update(int l, int r, array<ll, K> val) { update(1, 0, n - 1, l, r, val); }
-    node query(int l, int r) { return query(1, 0, n - 1, l, r); }
+    void update(int l, int r, T val) { update(1, 0, n - 1, l, r, val); }
+    Int query(int l, int r) { return query(1, 0, n - 1, l, r); }
 };
 
