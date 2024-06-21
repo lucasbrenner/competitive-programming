@@ -1,9 +1,10 @@
 #include "../data-structures/rmq.cpp"
 
-struct SuffixArray {
+struct suffix_array {
+    // lcp[i] = lcp(sa[i], sa[i - 1])
     vector<int> sa, lcp, rnk;
     rmq<int> RMQ;
-    SuffixArray(string& s, int lim=256) { // or basic_string<int>
+    suffix_array(string& s, int lim=256) { // or basic_string<int>
         int n = sz(s) + 1, k = 0, a, b;
         vector<int> x(all(s)+1), y(n), ws(max(n, lim));
         rnk.resize(n);
@@ -24,9 +25,18 @@ struct SuffixArray {
             for (k && k--, j = sa[rnk[i] - 1]; s[i + k] == s[j + k]; k++);
         RMQ = rmq<int>(lcp);
     }
-
+    // l e r sao posicoes no suffix array
     int query(int l, int r) {
-        if (l == r) return sz(sa) - l;
+        if (l == r) return sz(sa) - sa[l] - 1;
         return RMQ.query(min(l, r) + 1, max(l, r));
     }
+    int compare(int l1, int r1, int l2, int r2) {
+        int len1 = r1 - l1 + 1, len2 = r2 - l2 + 1;
+        int len = min({query(rnk[l1], rnk[l2]), len1, len2});
+        if (len1 == len2 && len == len1) return 0;
+        if (len == len1) return -1;
+        if (len == len2) return 1;
+        return rnk[l1] < rnk[l2] ? -1 : 1;
+    }
 };
+
