@@ -21,6 +21,7 @@ struct hsh {
             ans[j] = hh[L + r][j] - (l > 0 ? hh[L + l - 1][j] * ph[r - l + 1][j] % MOD[j] : 0);
             if (ans[j] < 0) ans[j] += MOD[j];
         }
+        // return ans[0] | (ans[1] << 31); // for K = 2
         return ans;
     }
 };
