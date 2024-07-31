@@ -33,38 +33,55 @@ template<class T> struct seg_tree {
         return query(left(id), l, mid, lq, rq) + query(right(id), mid + 1, r, lq, rq);
     }
 
+    // min R such that f(a[L] + a[L + 1] + ... + a[R]) is true
     template<typename F>
-    bool first_left(int id, int l, int r, int L, F f, node &cur, int &ans) {
-        if (r < L) return false;
-        int mid = (l + r) / 2;
-        if (L <= l) {
-            auto new_cur = cur + tree[id];
-            if (!f(new_cur)) {
-                cur = new_cur;
-                return false;
-            }
-            ans = r;
-            if (l != r) {
-                new_cur = cur + tree[left(id)];
-                if (!f(new_cur)) {
-                    cur = new_cur;
-                    first_left(right(id), mid + 1, r, L, f, cur, ans);
-                } else {
-                    first_left(left(id), l, mid, L, f, cur, ans);
-                }
-            }
-            return true;
-        } else {
-            if (first_left(left(id), l, mid, L, f, cur, ans)) return true;
-            return first_left(right(id), mid + 1, r, L, f, cur, ans);
-        }
-    }
-    // first R such that f(a[L] + a[L + 1] + ... + a[R]) is true
-    template<typename F>
-    int first_left(int L, F f) {
+    int min_right(int L, F f) {
         int ans = -1;
-        node aux;
-        first_left(1, 0, n - 1, L, f, aux, ans);
+        node cur;
+        auto go = [&](auto &&self, int id, int l, int r, int L) -> bool {
+            if (r < L) return false;
+            int mid = (l + r) / 2;
+            if (L <= l) {
+                auto new_cur = cur + tree[id];
+                if (!f(new_cur)) return (cur = new_cur), false;
+                ans = r;
+                if (l != r) {
+                    new_cur = cur + tree[left(id)];
+                    if (!f(new_cur)) cur = new_cur, self(self, right(id), mid + 1, r, L);
+                    else self(self, left(id), l, mid, L);
+                }
+                return true;
+            }
+            if (self(self, left(id), l, mid, L)) return true;
+            return self(self, right(id), mid + 1, r, L);
+        };
+        go(go, 1, 0, n - 1, L);
+        return ans;
+    }
+
+    // max L such that f(a[L] + a[L + 1] + ... + a[R]) is true
+    template<typename F>
+    int max_left(int R, F f) {
+        int ans = -1;
+        node cur;
+        auto go = [&](auto &&self, int id, int l, int r, int R) -> bool {
+            if (l > R) return false;
+            int mid = (l + r) / 2;
+            if (r <= R) {
+                auto new_cur = tree[id] + cur;
+                if (!f(new_cur)) return (cur = new_cur), false;
+                ans = l;
+                if (l != r) {
+                    new_cur = tree[right(id)] + cur;
+                    if (!f(new_cur)) cur = new_cur, self(self, left(id), l, mid, R);
+                    else self(self, right(id), mid + 1, r, R);
+                }
+                return true;
+            }
+            if (self(self, right(id), mid + 1, r, R)) return true;
+            return self(self, left(id), l, mid, R);
+        };
+        go(go, 1, 0, n - 1, R);
         return ans;
     }
 
