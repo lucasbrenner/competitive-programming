@@ -38,7 +38,7 @@ template<class T> struct seg_tree {
     int min_right(int L, F f) {
         int ans = -1;
         node cur;
-        auto go = [&](auto &&self, int id, int l, int r, int L) -> bool {
+        auto go = [&](auto &&self, int id, int l, int r) -> bool {
             if (r < L) return false;
             int mid = (l + r) / 2;
             if (L <= l) {
@@ -47,15 +47,15 @@ template<class T> struct seg_tree {
                 ans = r;
                 if (l != r) {
                     new_cur = cur + tree[left(id)];
-                    if (!f(new_cur)) cur = new_cur, self(self, right(id), mid + 1, r, L);
-                    else self(self, left(id), l, mid, L);
+                    if (!f(new_cur)) cur = new_cur, self(self, right(id), mid + 1, r);
+                    else self(self, left(id), l, mid);
                 }
                 return true;
             }
-            if (self(self, left(id), l, mid, L)) return true;
-            return self(self, right(id), mid + 1, r, L);
+            if (self(self, left(id), l, mid)) return true;
+            return self(self, right(id), mid + 1, r);
         };
-        go(go, 1, 0, n - 1, L);
+        go(go, 1, 0, n - 1);
         return ans;
     }
 
@@ -64,7 +64,7 @@ template<class T> struct seg_tree {
     int max_left(int R, F f) {
         int ans = -1;
         node cur;
-        auto go = [&](auto &&self, int id, int l, int r, int R) -> bool {
+        auto go = [&](auto &&self, int id, int l, int r) -> bool {
             if (l > R) return false;
             int mid = (l + r) / 2;
             if (r <= R) {
@@ -73,15 +73,15 @@ template<class T> struct seg_tree {
                 ans = l;
                 if (l != r) {
                     new_cur = tree[right(id)] + cur;
-                    if (!f(new_cur)) cur = new_cur, self(self, left(id), l, mid, R);
-                    else self(self, right(id), mid + 1, r, R);
+                    if (!f(new_cur)) cur = new_cur, self(self, left(id), l, mid);
+                    else self(self, right(id), mid + 1, r);
                 }
                 return true;
             }
-            if (self(self, right(id), mid + 1, r, R)) return true;
-            return self(self, left(id), l, mid, R);
+            if (self(self, right(id), mid + 1, r)) return true;
+            return self(self, left(id), l, mid);
         };
-        go(go, 1, 0, n - 1, R);
+        go(go, 1, 0, n - 1);
         return ans;
     }
 
