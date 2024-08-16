@@ -1,3 +1,5 @@
+#include "../contest/template.cpp"
+
 template <typename T>
 struct SlopeTrick {
   const T INF = numeric_limits<T>::max() / 3;
@@ -100,7 +102,7 @@ struct SlopeTrick {
   // f_{new} (x) = f(x - a)
   void shift(const T &a) { shift(a, a); }
  
-  // L, R を破壊する
+  // L, R
   T get(const T &x) {
     T ret = min_f;
     while (not L.empty()) {
