@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "*.java": "java",
+        "chrono": "cpp",
+        "complex": "cpp"
+    }
+}

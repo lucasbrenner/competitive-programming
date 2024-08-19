@@ -4,10 +4,10 @@ struct frac {
     ll num, den;
     frac() : num(0), den(1) {}
     frac(ll x) : num(x), den(1) {}
-    frac(ll x, ll y) : num(x), den(y) {}
+    frac(ll x, ll y) : num(x), den(y) {norm();}
     void norm() {
         if (den < 0) num = -num, den = -den;
-        ll g = gcd(num, den);
+        ll g = __gcd(abs(num), den);
         num /= g, den /= g;
     }
     frac& operator += (frac o) {
@@ -31,6 +31,9 @@ struct frac {
         return *this;
     }
     bool operator < (frac o) const { return num * o.den < den * o.num; }
+    bool operator > (frac o) const { return num * o.den > den * o.num; }
+    bool operator == (frac o) const { return num * o.den == den * o.num; }
+    bool operator <= (frac o) const { return num * o.den <= den * o.num; }
     frac operator + (frac o) const { return frac(*this) += o; }
     frac operator - (frac o) const { return frac(*this) -= o; }
     frac operator * (frac o) const { return frac(*this) *= o; }
