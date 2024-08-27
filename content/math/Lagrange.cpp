@@ -1,5 +1,7 @@
 #include "../primitives/mint.cpp"
 
+// dados (i, y(i)) para 0 <= i < n, retorna y(x)
+// em que y é um polinômio de grau n - 1
 Int evaluate_interpolation(ll x, vector<Int> y) {
     int n = y.size();
     
