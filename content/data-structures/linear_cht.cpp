@@ -11,7 +11,7 @@ struct line {
     }
 };
 
-// non-increasing slope, non-decreasing queries, max queries
+// non-increasing slope, non-increasing queries, max queries
 struct cht {
     deque<line> q;
     void add(ll a, ll b) {
