@@ -1,6 +1,6 @@
 #include "../contest/template.cpp"
 
-vector<vector<int>> rotate_ccw(vector<vector<int>> a) {
+vector<vector<int>> rotate_ccw(const vector<vector<int>> &a) {
     int n = sz(a), m = sz(a[0]);
     vector b(m, vector<int>(n));
     rep(i, 0, n) rep(j, 0, m) {
@@ -9,7 +9,7 @@ vector<vector<int>> rotate_ccw(vector<vector<int>> a) {
     return b;
 }
 
-vector<vector<int>> rotate_cw(vector<vector<int>> a) {
+vector<vector<int>> rotate_cw(const vector<vector<int>> &a) {
     int n = sz(a), m = sz(a[0]);
     vector b(m, vector<int>(n));
     rep(i, 0, n) rep(j, 0, m) {
