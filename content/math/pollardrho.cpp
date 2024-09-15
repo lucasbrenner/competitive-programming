@@ -64,3 +64,29 @@ vector<ll> fact(ll n) {
     l.insert(l.end(), r.begin(), r.end());
     return l;
 }
+
+vector<ll> get_divs(ll n) {
+    vector<ll> facts = fact(n);
+    map<ll,ll> mp;
+    for(auto e: facts) mp[e]++;
+    sort(all(facts));
+    facts.resize(unique(all(facts)) - facts.begin());
+    vector<ll> f(sz(facts));
+    rep(i,0,sz(f)) f[i] = mp[facts[i]];
+
+    vl divs;
+    auto go = [&](auto self, int i, ll cur) -> void {
+        if(i == sz(facts)) {
+            divs.push_back(cur);
+            return;
+        }
+
+        rep(j,0, f[i] + 1) {
+            self(self, i + 1, cur);
+            cur *= facts[i];
+        }
+    };
+    
+    go(go, 0, 1);
+    return divs;
+}
