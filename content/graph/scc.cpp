@@ -27,11 +27,6 @@ void solve(int n, int m) {
     for (int i = 0; i < n; i++) if (!used[i]) dfs1(i);
     used.assign(n, false);
     reverse(order.begin(), order.end());
-    for (auto v : order) if (!used[v]) {
-        dfs2(v);
-        component.clear();
-    }
-    used.assign(n, false);
 
     vector<int> roots(n, 0), root_nodes;
     vector<vector<int>> adj_scc(n);
