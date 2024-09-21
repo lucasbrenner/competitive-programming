@@ -26,5 +26,8 @@ template<typename T, int N> struct matrix {
         rep(i, 0, N) rep(j, 0, N) ans[i] += a[i][j] * o[j];
         return ans;
     }
+    array<T, N>& operator[](int i) {
+        return a[i];
+    }
 };
 
