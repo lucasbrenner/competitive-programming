@@ -1,7 +1,7 @@
 #include "../contest/template.cpp"
 
-// somatorio de floor((a * x + b) / m)
-// para x em [0, n)
+// soma de floor((a * x + b) / m)
+// para x inteiro em [0, n)
 ll floor_sum(ll n, ll m, ll a, ll b) {
     ll a1 = a / m;
     ll a2 = a % m;
