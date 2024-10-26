@@ -4,6 +4,7 @@ struct suffix_array {
     // lcp[i] = lcp(sa[i], sa[i - 1])
     vector<int> sa, lcp, rnk;
     rmq<int> RMQ;
+    //Se usar basic_string<int>, não colocar algum valor = 0
     suffix_array(string& s, int lim=256) { // or basic_string<int>
         int n = sz(s) + 1, k = 0, a, b;
         vector<int> x(all(s)+1), y(n), ws(max(n, lim));
