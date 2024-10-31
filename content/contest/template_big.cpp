@@ -1,5 +1,8 @@
 #include "bits/stdc++.h"
 using namespace std;
+//#pragma once
+//#pragma GCC optimize("O3,unroll-loops")
+//#pragma GCC target("avx2,bmi,bmi2,lzcnt,popcnt")
 
 #define endl '\n'
 #define rep(i, a, b) for (int i = a; i < (b); i++)
