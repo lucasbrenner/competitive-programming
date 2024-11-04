@@ -27,5 +27,7 @@ struct Point {
         return P(x*cos(a)-y*sin(a),x*sin(a)+y*cos(a)); }
     friend ostream& operator<<(ostream& os, P p) {
         return os << "(" << p.x << "," << p.y << ")"; }
+    template<class U>
+    Point(const Point<U>& p) : x(static_cast<T>(p.x)), y(static_cast<T>(p.y)) {}
 };
 
