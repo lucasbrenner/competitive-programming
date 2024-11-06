@@ -22,7 +22,7 @@ P dir(line h) {
     return h.b - h.a;
 }
 bool belongs(line h, P a) {
-    return dir(h).cross(a - h.a) > EPS;
+    return dir(h).cross(a - h.a) > -EPS;
 }
 
 vector<P> intersect(vector<line> H, double W) {
