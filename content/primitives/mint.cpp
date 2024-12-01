@@ -44,4 +44,10 @@ U& operator >> (U& is, mint<mod>& number) {
     return is;
 }
 
+template<typename U, int mod>
+U& operator << (U& os, mint<mod>& number){
+    os << number.x;
+    return os;
+}
+
 using Int = mint<(int)1e9 + 7>;
