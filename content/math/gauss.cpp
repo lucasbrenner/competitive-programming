@@ -10,7 +10,7 @@ pair<int, vector<T>> gauss(vector<vector<T>> a, vector<T> b){
     int f = 0;
     rep(i,0,m){
         rep(j,f,n){
-            if(a[j][i] < eps) continue;
+            if(fabs(a[j][i]) < eps) continue;
             
             swap(a[j], a[f]);
             T div = a[f][i];
