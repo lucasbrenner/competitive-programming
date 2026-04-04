@@ -45,7 +45,7 @@ U& operator >> (U& is, mint<mod>& number) {
 }
 
 template<typename U, int mod>
-U& operator << (U& os, mint<mod>& number){
+U& operator << (U& os, const mint<mod>& number){
     os << number.x;
     return os;
 }
