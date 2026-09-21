@@ -63,8 +63,8 @@ struct suffix_automaton {
         int pos = get(s);
         return pos == -1 ? 0 : cnt[pos];
     }
-    string kth(ll k) {
-        dfs(0);
+    string kth(ll k) {      // kth different substring
+        dfs(0);             // to consider equals add pre_cnt(); before the dfs
         int v = 0, prv = -1;
         string ans = "";
         while (k > 0) {
@@ -77,7 +77,7 @@ struct suffix_automaton {
                     k--;
                     ans += i + first;
                     v = st[v].to[i];
-                    break;
+                    break;      // to consider equals add k -= cnt[v]; before the break ad remove the k--
                 }
             }
         }
@@ -94,7 +94,7 @@ struct suffix_automaton {
     }
     ll dfs(int v) {
         if (paths[v] != -1) return paths[v];
-        paths[v] = 1;
+        paths[v] = 1;       // to consider equals change the 1 to paths[v] = (v == 0 ? 0 : cnt[v]);
         rep(i, 0, K) if (st[v].to[i] != -1) {
             paths[v] += dfs(st[v].to[i]);
         }

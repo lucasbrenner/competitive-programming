@@ -11,16 +11,14 @@ vector<vector<int>> block_cut(vector<vector<int>> g, vector<int> &is_cut, vector
     auto dfs = [&](auto &self, int v, int p) -> void {
         tin[v] = low[v] = ++t;
         st.push_back(v);
-        int children = 0;
         for (int ch : g[v]) if (ch != p) {
             if (tin[ch]) {
                 low[v] = min(low[v], tin[ch]);
             } else {
-                children++;
                 self(self, ch, v);
                 low[v] = min(low[v], low[ch]);
                 if (low[ch] >= tin[v]) {
-                    if (p != -1 || children > 1) is_cut[v] = 1;
+                    is_cut[v] |= tin[v] > 1 || tin[ch] > 2;
                     comps.push_back({v});
                     while (comps.back().back() != ch) {
                         comps.back().push_back(st.back());
